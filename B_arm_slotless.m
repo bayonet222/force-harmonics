@@ -41,7 +41,6 @@ end
 
 function J_func = J_v(N_t, R_s, v, s, theta_o, F1)
 % J_m according to Zhu (2010)
-% Assuming slot opening and distribution factors are 1
 
 J_func = 2/pi * N_t/R_s * K_sov(v, theta_o) .* K_pv(v, s) .* K_dv(v, F1);
 end

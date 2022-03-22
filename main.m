@@ -34,7 +34,7 @@ t_vect = theta_r/machine.omega_m;                   % Time [s]
 
 % Total slotless magnetic field, superposition of PM and armature
 % B_slotless = B_PM_sl + B_arm_sl;
-B_slotless = B_PM_sl + 0.0 * B_arm_sl;           % Currently focusing on B_PM at as armature reaction too strong
+B_slotless = B_PM_sl + B_arm_sl;           % Currently focusing on B_PM at as armature reaction too strong
 
 % Use Zarko's method for relative permeance along 1 slot or gap
 [lambda_slot, lambda_an_slot, lambda_bn_slot] = Zarko(machine, theta_vect_teeth, N_lambda, 'slot');
@@ -87,7 +87,6 @@ set(0,'defaulttextfontsize',20);
 set(0,'defaultaxesfontsize',12);
 set(0, 'DefaultLineLineWidth', 2);
 
-set(gcf,'color','w');
 set(0,'DefaultFigureColormap',parula);
 
 theta_ticks = 0:2*pi/parts/4:2*pi/parts;
@@ -121,6 +120,15 @@ set(gca,'XTickLabel', theta_labels)
 plt.B_arm_sl_t = figure;
 plot(theta_vect, imag(B_arm_sl(1,:)));
 title('Slotless tangential flux density due to armature reaction')
+xlabel('Angular position [rad]')
+ylabel('Flux density [T]')
+grid on;
+set(gca,'XTick',theta_ticks)
+set(gca,'XTickLabel', theta_labels)
+
+plt.B_r_slotless = figure;
+plot(theta_vect, real(B_slotless(1,:)));
+title('Slotless radial flux density in full-load case')
 xlabel('Angular position [rad]')
 ylabel('Flux density [T]')
 grid on;
@@ -177,6 +185,7 @@ set(gca,'XTickLabel', theta_labels)
 
 plt.f_r_fft = figure;
 bar(r, f_rr, 'FaceAlpha', 1);
+set(gcf,'color','w');
 title('Harmonics of the radial force')
 xlabel('Spatial order')
 ylabel('Force density [N/m^2]')
@@ -218,6 +227,7 @@ grid on;
 % Plot deformation
 plt.Yms = figure;
 bar(r(1:length(Y_ms)), Y_ms, 'FaceAlpha', 1);
+set(gcf,'color','w');
 title('Static deformation for different modes')
 xlabel('Spatial order')
 ylabel('Deflection [m]')
@@ -226,24 +236,25 @@ ylabel('Deflection [m]')
 %                            Save figures
 % ------------------------------------------------------------------
 
-export_fig(plt.lambda_re_slot, 'Figures/lambda_re_slot', '-eps', '-transparent')
-export_fig(plt.lambda_im_slot, 'Figures/lambda_im_slot', '-eps', '-transparent')
-export_fig(plt.lambda_re_gap, 'Figures/lambda_re_gap', '-eps', '-transparent')
-export_fig(plt.lambda_im_gap, 'Figures/lambda_im_gap', '-eps', '-transparent')
-export_fig(plt.B_PM_sl, 'Figures/B_PM_sl', '-eps', '-transparent')
-export_fig(plt.B_arm_sl_r, 'Figures/B_arm_sl_r', '-eps', '-transparent')
-export_fig(plt.B_arm_sl_t, 'Figures/B_arm_sl_t', '-eps', '-transparent')
-export_fig(plt.lambda_re, 'Figures/lambda_re', '-eps', '-transparent')
-export_fig(plt.lambda_im, 'Figures/lambda_im', '-eps', '-transparent')
-export_fig(plt.B_r, 'Figures/B_r', '-eps', '-transparent')
-export_fig(plt.B_t, 'Figures/B_t', '-eps', '-transparent')
-export_fig(plt.f_r, 'Figures/f_r', '-eps', '-transparent')
-export_fig(plt.f_r_fft, 'Figures/f_r_ftt', '-eps', '-dNOSAFER')
-export_fig(plt.f_t, 'Figures/f_t', '-eps', '-transparent')
-export_fig(plt.Tc, 'Figures/Tc', '-eps', '-transparent')
-export_fig(plt.f_avg_r, 'Figures/f_avg_r', '-eps', '-transparent')
-export_fig(plt.Te, 'Figures/Te', '-eps', '-transparent')
-export_fig(plt.Yms, 'Figures/Yms', '-eps')
+% export_fig(plt.lambda_re_slot, 'Figures/lambda_re_slot', '-eps', '-transparent')
+% export_fig(plt.lambda_im_slot, 'Figures/lambda_im_slot', '-eps', '-transparent')
+% export_fig(plt.lambda_re_gap, 'Figures/lambda_re_gap', '-eps', '-transparent')
+% export_fig(plt.lambda_im_gap, 'Figures/lambda_im_gap', '-eps', '-transparent')
+% export_fig(plt.B_PM_sl, 'Figures/B_PM_sl', '-eps', '-transparent')
+% export_fig(plt.B_arm_sl_r, 'Figures/B_arm_sl_r', '-eps', '-transparent')
+% export_fig(plt.B_arm_sl_t, 'Figures/B_arm_sl_t', '-eps', '-transparent')
+% export_fig(plt.B_r_slotless, 'Figures/B_r_slotless', '-eps', '-transparent')
+% export_fig(plt.lambda_re, 'Figures/lambda_re', '-eps', '-transparent')
+% export_fig(plt.lambda_im, 'Figures/lambda_im', '-eps', '-transparent')
+% export_fig(plt.B_r, 'Figures/B_r', '-eps', '-transparent')
+% export_fig(plt.B_t, 'Figures/B_t', '-eps', '-transparent')
+% export_fig(plt.f_r, 'Figures/f_r', '-eps', '-transparent')
+% export_fig(plt.f_r_fft, 'Figures/f_r_ftt', '-eps', '-dNOSAFER')
+% export_fig(plt.f_t, 'Figures/f_t', '-eps', '-transparent')
+% export_fig(plt.Tc, 'Figures/Tc', '-eps', '-transparent')
+% export_fig(plt.f_avg_r, 'Figures/f_avg_r', '-eps', '-transparent')
+% export_fig(plt.Te, 'Figures/Te', '-eps', '-transparent')
+% export_fig(plt.Yms, 'Figures/Yms', '-eps')
 
 % ------------------------------------------------------------------
 %                             Create GIFs
