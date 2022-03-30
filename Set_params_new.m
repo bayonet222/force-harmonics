@@ -19,13 +19,14 @@ machine.p = 160;                                % Number of pole pairs
 machine.Nseg = 16;                              % Number of segments
 machine.N_ph = 3;                               % Number of phases
 machine.q = machine.s/machine.p/machine.N_ph/2; % Slots/pole/phase
+machine.pf = 0.85;                              % Power factor
 
 % Geometric parameters
-machine.R_s = 4.84;                             % Stator inner radius [m]
+machine.R_s = 4.89;                             % Stator inner radius [m]
 machine.R_si = machine.R_s;
-machine.R_so = 4.95;                            % Stator outer radius [m]
-machine.R_r = 4.8;                              % Rotor radius [m];
-machine.L = 1.5;                                % Machine length [m]
+machine.R_so = 5.0;                             % Stator outer radius [m]
+machine.R_r = 4.85;                             % Rotor radius [m];
+machine.L = 1.7;                                % Machine length [m]
 
 machine.g = 0.01;                               % Air gap [m]
 
@@ -34,10 +35,10 @@ machine.theta_s = 2*pi / machine.s;             % Slot pitch
 machine.w_gap = 0.01;                           % Segment gap width UPDATE
 machine.theta_gap = machine.w_gap/machine.R_s;  % Segment gap angle
 
-machine.w_bi = 0.0460;                          % Back iron thickness [m]
-machine.w_th = 0.0383;                          % Tooth width [m]
+machine.w_bi = 0.0466;                          % Back iron thickness [m]
+machine.w_th = 0.0388;                          % Tooth width [m]
 machine.theta_o = machine.theta_s - ...
-    machine.w_th/machine.R_si;                  % Slot opening UPDATE
+    machine.w_th/machine.R_si;                  % Slot opening
 
 % Magnetic parameters
 machine.l_m = 0.03;                             % Magnet thickness [m]
@@ -48,10 +49,10 @@ machine.mu_r = 1.05;
 % Winding parameters
 machine.V_LL = 100e3 / 1.35;                    % Line-to-line voltage
 machine.V_ph = machine.V_LL/sqrt(3);            % Phase voltage
-machine.i_RMS = machine.Pe/machine.V_ph/3;      % Phase current
+machine.i_RMS = machine.Pe/machine.V_ph/3/machine.pf;  % Phase current
 
 machine.N_c = machine.s/2;                      % Number of coils
-machine.n_s = 70;                               % Number of turns per coil
+machine.n_s = 61;                               % Number of turns per coil
 machine.I_s = machine.n_s * machine.i_RMS;      % Slot current
 
 % Mechanical parameters

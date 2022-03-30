@@ -14,9 +14,9 @@ N_sm = N_spp*N_ph;              % Number of slots per pole
 Temp = 140;                     % Operating temperature copper
 
 % Geometric constraints
-L = 1.5;                        % Axial length [m]
-R_ro = 4.8;                     % Outside rotor radius [m]
-R_so = 4.95;                     % Outside stator radius [m]
+L = 1.7;                        % Axial length [m]
+R_ro = 4.85;                    % Outside rotor radius [m]
+R_so = 5.0;                     % Outside stator radius [m]
 g = 0.010;                      % Air gap [m]
 
 l_m = 0.03;                     % Magnet length [m]
@@ -48,6 +48,8 @@ B_max = 1.5;                    % Max flux density [T]
 k_st = 0.8;                     % Lamination stacking factor ?? 
 k_cp = 0.76;                    % Conductor packing factor ??
 alpha_m = 0.7;                  % Magnet fraction
+
+pf = 0.85;                      % Power factor [-]
 
 % Derived values
 R_si = R_ro + g + l_m;          % Inside stator radius [m]
@@ -116,7 +118,7 @@ k_s = 1;                        % SKEWED? (Neglected for now)
 n_s = floor(E_max/k_w/k_s/phi_g_rms/omega_e/(N_sp/2));  % Turns per slot
 e_max = N_sp/2*k_w*k_s*phi_g_rms*n_s*omega_e;         % Actual peak emf
 
-i = P/3/e_max;                  % Coil current equals phase current [Arms] 
+i = P/3/e_max/pf;               % Coil current equals phase current [Arms] 
 I_s = n_s * i;                  % Total slot current [Arms]
 I_ph = i;                       % Phase current [A] (optimistic estimate)
 J_c = I_s/k_cp/A_s/1e6;         % Current density [A/mm2] (rms)
@@ -171,3 +173,7 @@ if K_s * J_c > 200000
 else
     disp(['KJ OK: ', num2str(K_s * J_c/100), ' A^2/mm^2/cm'])
 end
+
+% Checking teeth flux density due to armature
+B_th = 1.5 * mu_0 * I_s * sqrt(2) / (g + l_m);
+disp(['Armature reaction in teeth: ', num2str(B_th), ' T (aim for ~.3 T)'])
