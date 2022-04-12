@@ -26,7 +26,7 @@ P1(2:end-1) = 2 * P1(2:end-1);
 
 N_F = 50;
 
-k_w = P1(2:N_F+1);
+k_w_tot = P1(2:N_F+1);
 % This is equal to sin(v * beta/2)/v * 4/pi
 
 % Get FFT of full pitch
@@ -40,6 +40,21 @@ for i = h
 end
 % This is equal to +/- 1/v * 4/pi
 
+k_w = k_w_tot./k_w_FP;
+
+% Create array without multiples of 3
+h_no3 = h;
+h_no3(~mod(h, 3))=[];
+
+k_w_no3 = k_w;
+k_w_no3(~mod(h, 3))=[];
+
+set(0,'defaulttextfontsize',20);
+set(0,'defaultaxesfontsize',12);
+set(0, 'DefaultLineLineWidth', 2);
+
+set(0,'DefaultFigureColormap',parula);
+
 figure
 bar(theta, n_phi)
 
@@ -49,5 +64,24 @@ plot(theta, N_c)
 figure
 plot(theta, N)
 
-figure
-bar(h, k_w./k_w_FP)
+plt_windingfactors = figure;
+bar(h, k_w, 'FaceAlpha', 1)
+hold
+bar(h(3:3:end), k_w(3:3:end), 0.3, 'FaceAlpha', 1)
+set(gcf,'color','w');
+title('Winding factors for a 12/10 machine')
+xlabel('Multiples of F1')
+ylabel('Winding factor')
+grid on;
+
+export_fig(plt_windingfactors, '../Figures/windingfactors', '-eps', '-dNOSAFER')
+
+plt_kw_over_v = figure;
+bar(h_no3, k_w_no3./h_no3, 'FaceAlpha', 1)
+set(gcf,'color','w');
+title('Contribution of harmonics to the MMF')
+xlabel('Multiples of F1')
+ylabel('k_w/v')
+grid on;
+
+export_fig(plt_kw_over_v, '../Figures/kw_over_v', '-eps', '-dNOSAFER')

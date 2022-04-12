@@ -126,7 +126,7 @@ J_c = I_s/k_cp/A_s/1e6;         % Current density [A/mm2] (rms)
 A_wire = A_s * k_cp/n_s;        % Wire area
 
 if J_c < J_max
-    disp(['Current density ok ', num2str(J_c),' A/mm2'])
+    disp(['Current density OK: ', num2str(J_c),' A/mm2'])
 else
     disp(['Current density too high: ', num2str(J_c),' A/mm2'])
 end 
@@ -136,7 +136,7 @@ Z_Y = 2 * V_coil / i;           % Equivalent load in Y-connection
 R_s = rho*n_s^2*L/k_cp/A_s;             % Slot resistance
 R_e = rho*n_s^2*pi*tau_c/2/k_cp/A_s;    % End turn resistance
 R_coil = 2 * (R_s + R_e);               % Coil resistance
-R_seg = 2 * R_coil;                     % Segment (2 coils) resistance
+R_seg = 4 * R_coil;                     % Segment (4 coils) resistance
 R_ph = N_sp*(R_s+R_e);                  % Phase resistance
 % AC effects?
 
@@ -145,7 +145,7 @@ g_e = k_c * g;                          % Effective air gap length
 L_g = n_s^2*mu_R*mu_0*L*tau_p*k_d/2/(l_m+mu_R*g_e); % Air gap L/slot
 L_s = n_s^2*mu_0*L*(d_s^2/3/A_s);                   % Slot L
 L_e = n_s^2*mu_0*tau_c/16*log(tau_c^2*pi/2/A_s);    % End turn leakage
-L_seg = 4 * (L_g + L_s + L_e);                      % Segment (2coils) ind
+L_seg = 4 * (L_g + L_s + L_e);                      % Segment (4coils) ind
 L_ph = N_sp * (L_g + L_s + L_e);                    % Phase inductance
 
 % Performance calculations
