@@ -232,6 +232,10 @@ title('Static deformation for different modes')
 xlabel('Spatial order')
 ylabel('Deflection [m]')
 
+% Print natural frequencies
+disp(f_n.Properties.Description)
+disp(f_n)
+
 % ------------------------------------------------------------------
 %                            Save figures
 % ------------------------------------------------------------------

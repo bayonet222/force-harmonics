@@ -64,10 +64,17 @@ machine.E_x = 100e9;                            % Young's modulus (axial) [Pa]
 machine.nu_plane = 0.22;                        % Poisson ratio (in plane)
 machine.nu_x = 0.64;                            % Poisson ratio (out of plane)
 
-
+% Frame parameters
+machine.h_f = 0.05;                             % Frame thickness [m]
+machine.L_f = 2.0;                              % Frame length [m]
+machine.rho_f = 2700;                           % Frame density [kg/m3] ALUMINIUM ASSUMED
+machine.E_f = 71e9;                             % Frame Young's modulus [Pa]
+machine.nu_f = 0.33;                            % Frame Poisson ratio
 
 % Derived geometric parameters
 machine.R_m = machine.R_r + machine.l_m;        % Magnet outer radius [m]
 machine.d_s = machine.R_so - machine.R_s - machine.w_bi; % Slot depth
+
+machine.D_f = 2*(machine.R_so + machine.h_f);   % Frame outer diameter [m]
 
 save params machine mu_0
