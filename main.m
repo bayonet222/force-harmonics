@@ -48,7 +48,7 @@ lambda = lambda_slot_total + lambda_gap - 1;
 B = B_slotless .* conj(lambda);
 
 % Perform Fourier transform of flux densities
-% TBD
+[k, b_rk] = fft_ss(real(B(1, :)), 300, parts);
 
 % ------------------------------------------------------------------
 %                          Force calculations
@@ -164,6 +164,13 @@ grid on;
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 
+plt.B_r_fft = figure;
+bar(k, b_rk, 'FaceAlpha', 1);
+set(gcf,'color','w');
+title('Harmonics of the radial flux density')
+xlabel('Spatial order')
+ylabel('Magnetic flux density [T]')
+
 plt.B_t = figure;
 plot(theta_vect, imag(B(1,:)));
 title('Slotted tangential flux density at t=0')
@@ -251,6 +258,7 @@ disp(f_n)
 % export_fig(plt.lambda_re, 'Figures/lambda_re', '-eps', '-transparent')
 % export_fig(plt.lambda_im, 'Figures/lambda_im', '-eps', '-transparent')
 % export_fig(plt.B_r, 'Figures/B_r', '-eps', '-transparent')
+% export_fig(plt.B_r_fft, 'Figures/B_r_ftt', '-eps', '-dNOSAFER')
 % export_fig(plt.B_t, 'Figures/B_t', '-eps', '-transparent')
 % export_fig(plt.f_r, 'Figures/f_r', '-eps', '-transparent')
 % export_fig(plt.f_r_fft, 'Figures/f_r_ftt', '-eps', '-dNOSAFER')

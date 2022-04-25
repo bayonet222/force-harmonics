@@ -13,6 +13,7 @@ h_sl = machine_params.d_s;                      % Slot depth
 w_th = machine_params.w_th;                     % Tooth width
 E_c = machine_params.E_plane;                   % Young's modulus
 nu_c = machine_params.nu_plane;                 % Poisson ratio
+w_s = 2*pi/s * machine_params.R_si - w_th;      % Slot width
 
 kappa2 = h_c^2 / (3 * D_c^2);                   % Nondimensional thickness
 
@@ -24,6 +25,9 @@ rho_f = machine_params.rho_f;                   % Frame density
 E_f = machine_params.E_f;                       % Frame Young's modulus
 nu_f = machine_params.nu_f;                     % Frame Poisson ratio
 R_f = 0.5 * (D_f - h_f);                        % Mean frame radius
+
+% Winding parameters
+rho_w = machine_params.rho_w;                   % Winding density
 
 % Considered spatial orders
 % Radial: 0,1,2... until lowest force order, then multiples of lowest order
@@ -37,6 +41,8 @@ AxialOrder = [ones(1, length(RadialOrder)/3), ...
 % Calculate masses of different components
 M_c = pi*D_c*h_c*L_i * rho_c * k_i;             % Stator core mass 
 M_t = s * h_sl * w_th * L_i * rho_c * k_i;      % Teeth mass
+M_w = (s * w_s * h_sl * L_i + ...
+    (w_s + w_th) * D_c * pi * h_sl)* rho_w;     % Winding mass (slot + overhang)
 M_f = pi*2*R_f*h_f*L_f * rho_f;                 % Frame mass
 
 % Calculate mass addition factors
@@ -48,6 +54,10 @@ M_0 = M_c * k_md;
 % Eq. (5.25) for core
 K_mc = 4 * DonnellMushtari2(kappa2, RadialOrder).^2 / D_c * pi * L_i * h_c * E_c / (1-nu_c^2);
 
+% Hoppe's method
+%K_mc = 16/12 * pi * E_c * h_c^3 * L_i / D_c^3 * ...
+%    RadialOrder.^2 .* (RadialOrder.^2 - 1).^2 ./ (RadialOrder.^2 + 1);
+
 % Eq. (5.34) for frame
 K_mn = 2 * DonnellMushtari3(RadialOrder, AxialOrder, nu_f, R_f, L_f, h_f)/R_f * ...
     pi*L_f*h_f*E_f ./ (1-nu_f^2);
@@ -55,7 +65,7 @@ K_mn = 2 * DonnellMushtari3(RadialOrder, AxialOrder, nu_f, R_f, L_f, h_f)/R_f * 
 % Calculate natural frequencies of core, frame and system
 f_m_c = 1/(2*pi) * sqrt(K_mc / M_0);
 f_mn_f = 1/(2*pi) * sqrt(K_mn / M_f);
-f_mn_s = 1/(2*pi) * sqrt((K_mc + K_mn)/(M_0 + M_f));
+f_mn_s = 1/(2*pi) * sqrt((K_mc + K_mn)/(M_0 + M_f + M_w));
 
 % Create table with output
 f_n_table = table(f_m_c.', f_mn_f.', f_mn_s.', ...
@@ -68,7 +78,7 @@ end
 function Omega_m = DonnellMushtari2(kappa2, m)
     % Roots of the second order characteristic equation
     
-Omega_m = 0.5 * sqrt((1 + m.^2 + kappa2*m.^4) + ...
+Omega_m = 0.5 * sqrt((1 + m.^2 + kappa2*m.^4) - ...
     sqrt((1 + m.^2 + kappa2 * m.^4).^2 - 4 * kappa2 * m.^6));
 
 Omega_m(m == 0) = 1;

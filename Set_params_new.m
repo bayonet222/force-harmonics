@@ -67,9 +67,12 @@ machine.nu_x = 0.64;                            % Poisson ratio (out of plane)
 % Frame parameters
 machine.h_f = 0.05;                             % Frame thickness [m]
 machine.L_f = 2.0;                              % Frame length [m]
-machine.rho_f = 2700;                           % Frame density [kg/m3] ALUMINIUM ASSUMED
-machine.E_f = 71e9;                             % Frame Young's modulus [Pa]
-machine.nu_f = 0.33;                            % Frame Poisson ratio
+machine.rho_f = 7850;                           % Frame density [kg/m3] STEEL ASSUMED
+machine.E_f = 200e9;                            % Frame Young's modulus [Pa]
+machine.nu_f = 0.30;                            % Frame Poisson ratio
+
+% Winding parameters
+machine.rho_w = 8890;                           % Winding density
 
 % Derived geometric parameters
 machine.R_m = machine.R_r + machine.l_m;        % Magnet outer radius [m]

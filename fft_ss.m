@@ -1,5 +1,5 @@
 function [m, F_m] = fft_ss(signal, N_F, multiplier)
-% Signle-sided FFT of the signal with N_F Fourier components
+% Single-sided FFT of the signal with N_F Fourier components
 %   For ease of using fft
 L = length(signal);
 
