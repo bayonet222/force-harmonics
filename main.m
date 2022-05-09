@@ -19,7 +19,7 @@ N_lambda = 25;                                      % Number of Fourier componen
 theta_vect = linspace(0, 2*pi/parts, N_theta);      % Theta [rad]
 theta_vect_teeth = linspace(0, 2*pi/machine.s, N_theta_teeth);    
 
-theta_r = linspace(0, 2*pi/parts, 1000);            % Rotor position
+theta_r = linspace(0, 2*pi/parts, 1001);            % Rotor position
 t_vect = theta_r/machine.omega_m;                   % Time [s]
 
 % ------------------------------------------------------------------
@@ -33,8 +33,7 @@ t_vect = theta_r/machine.omega_m;                   % Time [s]
 [B_mv, B_arm_sl] = B_arm_slotless(theta_vect, t_vect, machine);
 
 % Total slotless magnetic field, superposition of PM and armature
-% B_slotless = B_PM_sl + B_arm_sl;
-B_slotless = B_PM_sl + B_arm_sl;           % Currently focusing on B_PM at as armature reaction too strong
+B_slotless = B_PM_sl + B_arm_sl;          
 
 % Use Zarko's method for relative permeance along 1 slot or gap
 [lambda_slot, lambda_an_slot, lambda_bn_slot] = Zarko(machine, theta_vect_teeth, N_lambda, 'slot');
@@ -49,6 +48,7 @@ B = B_slotless .* conj(lambda);
 
 % Perform Fourier transform of flux densities
 [k, b_rk] = fft_ss(real(B(1, :)), 300, parts);
+[B_fx, B_ft, B_2d_fft] = fft_2D(real(B), parts, t_vect(end));
 
 % ------------------------------------------------------------------
 %                          Force calculations
@@ -57,6 +57,8 @@ B = B_slotless .* conj(lambda);
 % Total complex forces and its FFT
 f = B.^2 / (2 * mu_0);
 [r, f_rr] = fft_ss(real(f(1,:)), 300, parts);
+
+[f_fx, f_ft, f_2d_fft] = fft_2D(real(f), parts, t_vect(end));
 
 % Constant forces and torque
 f_avg = transpose(mean(f, 2));
@@ -91,6 +93,10 @@ set(0,'DefaultFigureColormap',parula);
 
 theta_ticks = 0:2*pi/parts/4:2*pi/parts;
 theta_labels = strrep(string(sym(theta_ticks)), 'pi', '\pi');
+
+% Create colormap with white mapped to the lowest values
+jet_copy = jet;
+fft_colormap = [1 1 1; 1 1 1; 1 1 1; 1 1 1; 1 1 1; jet_copy(20:end-20, :)];
 
 % Show accuracy of Fourier series of permeance
 [plt.lambda_re_slot, plt.lambda_im_slot] = ...
@@ -136,23 +142,27 @@ set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 
 % Plot permeance 
-plt.lambda_re = figure;
+plt.lambda = figure;
+subplot(2,1,1);
 plot(theta_vect, real(lambda));
 title('Real part of the relative permeance')
 xlabel('Angular position [rad]')
 ylabel('Relative permeance')
 grid on;
+xlim([0 theta_ticks(end)])
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 
-plt.lambda_im = figure;
+subplot(2,1,2)
 plot(theta_vect, imag(lambda));
 title('Imaginary part of the relative permeance')
 xlabel('Angular position [rad]')
 ylabel('Relative permeance')
 grid on;
+xlim([0 theta_ticks(end)])
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
+plt.lambda.Position(3) = plt.lambda.Position(3)*2;
 
 % Plot slotted flux density
 plt.B_r = figure;
@@ -170,6 +180,19 @@ set(gcf,'color','w');
 title('Harmonics of the radial flux density')
 xlabel('Spatial order')
 ylabel('Magnetic flux density [T]')
+
+% Plot 2D FFT with decreased resolution for visibility
+plt.B_r_fft_2d = figure;
+imagesc(B_fx(1:2:end), B_ft(1:2:end), abs(B_2d_fft(1:2:end, 1:2:end)));
+xlim([0, 150*parts])
+ylim([-8 * machine.f_e, 8 * machine.f_e])
+colormap(fft_colormap);
+c = colorbar;
+c.Label.String = 'Magnetic flux density [T]';
+set(gcf,'color','w');
+title('Harmonics of the radial flux density')
+xlabel('Spatial order')
+ylabel('Frequency [Hz]')
 
 plt.B_t = figure;
 plot(theta_vect, imag(B(1,:)));
@@ -196,6 +219,18 @@ set(gcf,'color','w');
 title('Harmonics of the radial force')
 xlabel('Spatial order')
 ylabel('Force density [N/m^2]')
+
+plt.f_r_fft_2d = figure;
+imagesc(f_fx(1:2:end), f_ft(1:2:end), abs(f_2d_fft(1:2:end, 1:2:end)));
+xlim([0, 150*parts])
+ylim([-8 * machine.f_e, 8 * machine.f_e])
+colormap(fft_colormap);
+c = colorbar;
+c.Label.String = 'Force density [N/m^2]';
+set(gcf,'color','w');
+title('Harmonics of the radial force')
+xlabel('Spatial order')
+ylabel('Frequency [Hz]')
 
 plt.f_t = figure;
 plot(theta_vect, imag(f(1,:)));
@@ -255,13 +290,14 @@ disp(f_n)
 % export_fig(plt.B_arm_sl_r, 'Figures/B_arm_sl_r', '-eps', '-transparent')
 % export_fig(plt.B_arm_sl_t, 'Figures/B_arm_sl_t', '-eps', '-transparent')
 % export_fig(plt.B_r_slotless, 'Figures/B_r_slotless', '-eps', '-transparent')
-% export_fig(plt.lambda_re, 'Figures/lambda_re', '-eps', '-transparent')
-% export_fig(plt.lambda_im, 'Figures/lambda_im', '-eps', '-transparent')
+% export_fig(plt.lambda, 'Figures/lambda', '-eps', '-transparent')
 % export_fig(plt.B_r, 'Figures/B_r', '-eps', '-transparent')
-% export_fig(plt.B_r_fft, 'Figures/B_r_ftt', '-eps', '-dNOSAFER')
+% export_fig(plt.B_r_fft, 'Figures/B_r_fft', '-eps', '-dNOSAFER')
+% export_fig(plt.B_r_fft_2d, 'Figures/B_r_fft_2d', '-eps', '-dNOSAFER')
 % export_fig(plt.B_t, 'Figures/B_t', '-eps', '-transparent')
 % export_fig(plt.f_r, 'Figures/f_r', '-eps', '-transparent')
-% export_fig(plt.f_r_fft, 'Figures/f_r_ftt', '-eps', '-dNOSAFER')
+% export_fig(plt.f_r_fft, 'Figures/f_r_fft', '-eps', '-dNOSAFER')
+% export_fig(plt.f_r_fft_2d, 'Figures/f_r_fft_2d', '-eps', '-dNOSAFER')
 % export_fig(plt.f_t, 'Figures/f_t', '-eps', '-transparent')
 % export_fig(plt.Tc, 'Figures/Tc', '-eps', '-transparent')
 % export_fig(plt.f_avg_r, 'Figures/f_avg_r', '-eps', '-transparent')

@@ -80,4 +80,7 @@ machine.d_s = machine.R_so - machine.R_s - machine.w_bi; % Slot depth
 
 machine.D_f = 2*(machine.R_so + machine.h_f);   % Frame outer diameter [m]
 
+% Derived electrical parameters
+machine.f_e = machine.n_rpm/60 * machine.p;     % Electrical frequency [Hz]
+
 save params machine mu_0

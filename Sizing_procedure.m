@@ -32,7 +32,7 @@ mu_0 = 4*pi*10^-7;              % Vaccuum permeability [H/m]
 B_r = 1.2;                      % PM remanence [T]
 
 rho_s = 7600;                   % Density of stator [kg/m3]
-Gamma_s = 0.6;                  % Core loss density (Bmax, fe) [W/kg] ??
+Gamma_s = 1.0;                  % Core loss density (Bmax, fe) [W/kg] ??
 
 % Voltage output
 V_DC = 100e3;                   % DC Output voltage of generator [VDC]
