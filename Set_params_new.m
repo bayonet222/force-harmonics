@@ -34,6 +34,7 @@ machine.theta_s = 2*pi / machine.s;             % Slot pitch
 
 machine.w_gap = 0.01;                           % Segment gap width UPDATE
 machine.theta_gap = machine.w_gap/machine.R_s;  % Segment gap angle
+machine.gap_loc = 19;                           % Tooth # of gap, from a-axis
 
 machine.w_bi = 0.0466;                          % Back iron thickness [m]
 machine.w_th = 0.0388;                          % Tooth width [m]
@@ -49,7 +50,7 @@ machine.mu_r = 1.05;
 % Winding parameters
 machine.V_LL = 100e3 / 1.35;                    % Line-to-line voltage
 machine.V_ph = machine.V_LL/sqrt(3);            % Phase voltage
-machine.i_RMS = machine.Pe/machine.V_ph/3/machine.pf;  % Phase current
+machine.i_RMS = -machine.Pe/machine.V_ph/3/machine.pf;  % Phase current
 
 machine.N_c = machine.s/2;                      % Number of coils
 machine.n_s = 61;                               % Number of turns per coil

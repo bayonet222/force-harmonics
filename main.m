@@ -12,6 +12,7 @@ load params
 % ------------------------------------------------------------------
 parts = machine.Nseg;                               % Section of the machine analysed
 
+% Stationary part
 N_theta_teeth = 101;                                % Number of samples/tooth
 N_theta = (N_theta_teeth-1)*machine.s/parts + 1;    % Number of samples/segment
 N_lambda = 25;                                      % Number of Fourier components
@@ -19,6 +20,10 @@ N_lambda = 25;                                      % Number of Fourier componen
 theta_vect = linspace(0, 2*pi/parts, N_theta);      % Theta [rad]
 theta_vect_teeth = linspace(0, 2*pi/machine.s, N_theta_teeth);    
 
+% Gap index
+gap_idx = (machine.gap_loc - machine.s/parts/2) * (N_theta_teeth-1);
+
+% Rotating part
 theta_r = linspace(0, 2*pi/parts, 1001);            % Rotor position
 t_vect = theta_r/machine.omega_m;                   % Time [s]
 
@@ -37,17 +42,23 @@ B_slotless = B_PM_sl + B_arm_sl;
 
 % Use Zarko's method for relative permeance along 1 slot or gap
 [lambda_slot, lambda_an_slot, lambda_bn_slot] = Zarko(machine, theta_vect_teeth, N_lambda, 'slot');
-[lambda_gap, lambda_an_gap, lambda_bn_gap] = Zarko(machine, theta_vect, N_lambda*machine.s/machine.Nseg, 'gap');
+[lambda_gap_c, lambda_an_gap, lambda_bn_gap] = Zarko(machine, theta_vect, N_lambda*machine.s/machine.Nseg, 'gap');
+
+% Shift the segment gap to the correct location
+lambda_gap = [lambda_gap_c(end-gap_idx+1:end) lambda_gap_c(1:end-gap_idx)];
 
 % Repeat the slot permeance s/Nseg times and add to the gap permeance
 lambda_slot_total = [repmat(lambda_slot(1:end-1), 1, machine.s/machine.Nseg), lambda_slot(end)];
 lambda = lambda_slot_total + lambda_gap - 1;
 
 % Obtain the slotted flux density
+B_noload = B_PM_sl .* conj(lambda);
 B = B_slotless .* conj(lambda);
 
 % Perform Fourier transform of flux densities
-[k, b_rk] = fft_ss(real(B(1, :)), 300, parts);
+[k, b_rk_NL] = fft_ss(real(B_noload(1, :)), 100, parts);
+
+[~, b_rk] = fft_ss(real(B(1, :)), 100, parts);
 [B_fx, B_ft, B_2d_fft] = fft_2D(real(B), parts, t_vect(end));
 
 % ------------------------------------------------------------------
@@ -102,7 +113,7 @@ fft_colormap = [1 1 1; 1 1 1; 1 1 1; 1 1 1; 1 1 1; jet_copy(20:end-20, :)];
 [plt.lambda_re_slot, plt.lambda_im_slot] = ...
     Zarko_reconstruct(lambda_an_slot, lambda_bn_slot, machine.s, theta_vect_teeth, lambda_slot);
 [plt.lambda_re_gap, plt.lambda_im_gap] = ...
-    Zarko_reconstruct(lambda_an_gap, lambda_bn_gap, machine.Nseg, theta_vect, lambda_gap);
+    Zarko_reconstruct(lambda_an_gap, lambda_bn_gap, machine.Nseg, theta_vect, lambda_gap_c);
 
 % Plot slotless fields
 plt.B_PM_sl = figure;
@@ -164,7 +175,26 @@ set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 plt.lambda.Position(3) = plt.lambda.Position(3)*2;
 
-% Plot slotted flux density
+% Plot no-load flux density
+plt.B_r_NL = figure;
+plot(theta_vect, real(B_noload(1,:)));
+title('Slotted radial flux density at t=0, no-load')
+xlabel('Angular position [rad]')
+ylabel('Flux density [T]')
+grid on;
+set(gca,'XTick',theta_ticks)
+set(gca,'XTickLabel', theta_labels)
+
+plt.B_t_NL = figure;
+plot(theta_vect, imag(B_noload(1,:)));
+title('Slotted tangential flux density at t=0, no-load')
+xlabel('Angular position [rad]')
+ylabel('Flux density [T]')
+grid on;
+set(gca,'XTick',theta_ticks)
+set(gca,'XTickLabel', theta_labels)
+
+% Plot on-load flux density
 plt.B_r = figure;
 plot(theta_vect, real(B(1,:)));
 title('Slotted radial flux density at t=0')
@@ -175,11 +205,15 @@ set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 
 plt.B_r_fft = figure;
-bar(k, b_rk, 'FaceAlpha', 1);
+bar(k, [b_rk_NL; b_rk], 1.5, 'FaceAlpha', 1);
 set(gcf,'color','w');
 title('Harmonics of the radial flux density')
 xlabel('Spatial order')
 ylabel('Magnetic flux density [T]')
+legend('No-load', 'On-load')
+plt.B_r_fft.Position(3) = plt.B_r_fft.Position(3)*1.5;
+ax=gca;
+ax.XAxis.MinorTick = 'on';
 
 % Plot 2D FFT with decreased resolution for visibility
 plt.B_r_fft_2d = figure;
@@ -219,6 +253,8 @@ set(gcf,'color','w');
 title('Harmonics of the radial force')
 xlabel('Spatial order')
 ylabel('Force density [N/m^2]')
+ax=gca;
+ax.XAxis.MinorTick = 'on';
 
 plt.f_r_fft_2d = figure;
 imagesc(f_fx(1:2:end), f_ft(1:2:end), abs(f_2d_fft(1:2:end, 1:2:end)));
