@@ -45,7 +45,7 @@ B_slotless = B_PM_sl + B_arm_sl;
 [lambda_gap_c, lambda_an_gap, lambda_bn_gap] = Zarko(machine, theta_vect, N_lambda*machine.s/machine.Nseg, 'gap');
 
 % Shift the segment gap to the correct location
-lambda_gap = [lambda_gap_c(end-gap_idx+1:end) lambda_gap_c(1:end-gap_idx)];
+lambda_gap = circshift(lambda_gap_c, gap_idx);
 
 % Repeat the slot permeance s/Nseg times and add to the gap permeance
 lambda_slot_total = [repmat(lambda_slot(1:end-1), 1, machine.s/machine.Nseg), lambda_slot(end)];
@@ -66,12 +66,17 @@ B = B_slotless .* conj(lambda);
 % ------------------------------------------------------------------
 
 % Total complex forces and its FFT
+f_noload = B_noload.^2 / (2 * mu_0);
+
 f = B.^2 / (2 * mu_0);
 [r, f_rr] = fft_ss(real(f(1,:)), 300, parts);
 
 [f_fx, f_ft, f_2d_fft] = fft_2D(real(f), parts, t_vect(end));
 
 % Constant forces and torque
+f_NL_avg = transpose(mean(f_noload, 2));
+T_e_NL = machine.R_s^2 * 2*pi * machine.L * imag(f_NL_avg);
+
 f_avg = transpose(mean(f, 2));
 T_e = machine.R_s^2 * 2*pi * machine.L * imag(f_avg);
 
@@ -79,8 +84,9 @@ T_e = machine.R_s^2 * 2*pi * machine.L * imag(f_avg);
 f_rr(1) = (max(real(f_avg)) - min(real(f_avg)))/2;
 
 % Calculate cogging torque due to slots and segments
-T_c = cogging_torque(B_PM_sl(1,:), lambda_slot_total, machine, parts, theta_r, 'slot');
+T_c_slot = cogging_torque(B_PM_sl(1,:), lambda_slot_total, machine, parts, theta_r, 'slot');
 T_c_seg = cogging_torque(B_PM_sl(1,:), lambda_gap, machine, parts, theta_r, 'gap');
+T_c = T_c_slot + T_c_seg;
 
 % ------------------------------------------------------------------
 %                        Mechanical calculations
@@ -259,7 +265,7 @@ ax.XAxis.MinorTick = 'on';
 plt.f_r_fft_2d = figure;
 imagesc(f_fx(1:2:end), f_ft(1:2:end), abs(f_2d_fft(1:2:end, 1:2:end)));
 xlim([0, 150*parts])
-ylim([-8 * machine.f_e, 8 * machine.f_e])
+ylim([-8.2 * machine.f_e, 8.2 * machine.f_e])
 colormap(fft_colormap);
 c = colorbar;
 c.Label.String = 'Force density [N/m^2]';
@@ -279,7 +285,8 @@ set(gca,'XTickLabel', theta_labels)
 
 % Plot cogging torque for slots and slots+segments
 plt.Tc = figure;
-plot(theta_r, T_c, theta_r, (T_c + T_c_seg));
+subplot(1,3,[1,2])
+plot(theta_r, [T_c_slot; T_c]);
 title('Cogging torque')
 xlabel('Rotor angular position [rad]')
 ylabel('Torque [Nm]')
@@ -287,12 +294,29 @@ grid on;
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 
+l_closeup = ceil(length(t_vect)/(machine.p*2/parts));   % Close up range
+subplot(1,3,3)
+plot(theta_r(1:l_closeup), [T_c_slot(1:l_closeup); T_c(1:l_closeup)]);
+title('Close up')
+xlabel('Rotor angular position [rad]')
+ylabel('Torque [Nm]')
+grid on;
+legend({'Due to slots', "Due to slots"+newline+ "and segments"})
+plt.Tc.Position(3) = plt.Tc.Position(3)*2;
+
 % Plot average forces
 plt.f_avg_r = figure;
 plot(t_vect, real(f_avg));
 title('Average radial force')
 xlabel('Time [s]')
 ylabel('Force density [N/m^2]')
+grid on;
+
+plt.Te_NL = figure;
+plot(t_vect, T_e_NL);
+title('Total torque, no-load case')
+xlabel('Time [s]')
+ylabel('Torque [Nm]')
 grid on;
 
 plt.Te = figure;
