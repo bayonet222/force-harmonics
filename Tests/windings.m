@@ -13,6 +13,7 @@ for t = [50 550]
 end
 
 N_c = cumtrapz(theta, n_phi)*s*100/2/pi;
+N_c(1) = N_c(2); % Remove leading zero
 
 N = N_c - (sum(N_c)/length(N_c));
 
@@ -35,7 +36,7 @@ k_w_FP = zeros(1, N_F);
 
 for i = h
     if mod(i, 2) == 1
-        k_w_FP(i) = (-1)^((i-1)/2) * 4/i/pi;
+        k_w_FP(i) = abs((-1)^((i-1)/2) * 4/i/pi);
     end
 end
 % This is equal to +/- 1/v * 4/pi
@@ -63,6 +64,10 @@ plot(theta, N_c)
 
 figure
 plot(theta, N)
+
+figure
+bar(h, k_w_tot)
+title('total kw')
 
 plt_windingfactors = figure;
 bar(h, k_w, 'FaceAlpha', 1)

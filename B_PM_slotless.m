@@ -18,7 +18,7 @@ mu_r = machine_params.mu_r;
 omega_m = machine_params.omega_m;       % Rotation speed
 
 % Set mu
-mu_max = 25;
+mu_max = 35;
 mu = transpose(1:2:mu_max);            % Odd integers
 
 B_mmu = K_B(mu, p, R_s, R_r, R_m, Br, alpha_m, mu_r) ...

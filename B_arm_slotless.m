@@ -18,7 +18,7 @@ I_1 = machine_params.i_RMS * sqrt(2);               % Amplitude of fundamental c
 omega_m = machine_params.omega_m;                   % Rotation speed
 
 F_1 = gcd(p, s);                                    % Number of parts
-v = transpose([1 5 7 11 13 17 19 23 25 29]*F_1);    % Spatial orders
+v = transpose([1 5 7 11 13 17 19 23 25 29 31 35 37 41 43 47 49]*F_1);    % Spatial orders
 
 B_mv_r = 3*mu_0/2 * J_v(N_t, R_s, v, s, theta_o, F_1) .* F_v(R_r, R_s, v, F_1) * I_1;
 B_mv_t = 3*mu_0/2 * J_v(N_t, R_s, v, s, theta_o, F_1) .* G_v(R_r, R_s, v, F_1) * I_1;
@@ -33,8 +33,11 @@ B_arm_t0 = sum(B_mv_r .* sin(v.*theta_vect) + ...
 B_arm = zeros(length(t_vect), length(theta_vect));
 
 for i = 1:length(t_vect)
-    B_arm(i,:) = sum(B_mv_r .* sin(v.*theta_vect - p*omega_m*t_vect(i)) ...
-    + 1j * B_mv_t .* cos(v.*theta_vect - p*omega_m*t_vect(i)));
+    B_arm(i,:) = sum(B_mv_r .* sin(rot(v, F_1).* v.*theta_vect - p*omega_m*t_vect(i)) ...
+    + 1j * B_mv_t .* rot(v, F_1) .* cos(rot(v, F_1).* v.*theta_vect - p*omega_m*t_vect(i)));
+
+%     B_arm(i,:) = sum(B_mv_r .* sin(v.*theta_vect - p*omega_m*t_vect(i)) ...
+%     + 1j * B_mv_t .* cos(v.*theta_vect - p*omega_m*t_vect(i)));
 end
 
 end
@@ -55,13 +58,27 @@ function pitch_factor = K_pv(v, s)
 % The pitch factor as described by Zhu and Gieras
 % K_pv = sin(v * beta_s/2), beta in mechanical radians
 pitch_factor = sin(v * pi /s);
+
 end
 
 function distribution_factor = K_dv(v, F1)
 % The distribution factor according to Zhu/
 % In fact, it only creates a [1 -1 1 -1 ...] factor for v=[1 3 5 7]
 
-distribution_factor = sin(v/F1 * pi/2);
+%distribution_factor = sin(v/F1 * pi/2);
+distribution_factor = 1 .^v;
+end
+
+function rotation_sign = rot(v, F1)
+
+
+k_taum = round(sin(pi * (v/F1-1)/2),5) ./ round((3 * sin(pi*(v/F1-1)/6)),5);
+k_taum(isnan(k_taum))=1;
+k_taup = round(sin(pi * (v/F1+1)/2),5) ./ round((3 * sin(pi*(v/F1+1)/6)),5);
+k_taup(isnan(k_taup))=1;
+
+rotation_sign = sign(k_taup-k_taum);
+
 end
 
 function geom = F_v(R_r, R_s, v, F1)

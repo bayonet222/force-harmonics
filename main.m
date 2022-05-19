@@ -53,12 +53,18 @@ lambda = lambda_slot_total + lambda_gap - 1;
 
 % Obtain the slotted flux density
 B_noload = B_PM_sl .* conj(lambda);
+B_arm = B_arm_sl .* conj(lambda);
 B = B_slotless .* conj(lambda);
 
 % Perform Fourier transform of flux densities
 [k, b_rk_NL] = fft_ss(real(B_noload(1, :)), 100, parts);
+[~, b_tk_NL] = fft_ss(imag(B_noload(1, :)), 100, parts);
+
+[~, b_rk_arm] = fft_ss(real(B_arm(1, :)), 100, parts);
+[~, b_tk_arm] = fft_ss(imag(B_arm(1, :)), 100, parts);
 
 [~, b_rk] = fft_ss(real(B(1, :)), 100, parts);
+[~, b_tk] = fft_ss(imag(B(1, :)), 100, parts);
 [B_fx, B_ft, B_2d_fft] = fft_2D(real(B), parts, t_vect(end));
 
 % ------------------------------------------------------------------
@@ -200,6 +206,36 @@ grid on;
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 
+% Plot armature slotted flux density
+plt.B_r_arm = figure;
+plot(theta_vect, real(B_arm(1,:)));
+title('Slotted radial flux density at t=0, armature')
+xlabel('Angular position [rad]')
+ylabel('Flux density [T]')
+grid on;
+set(gca,'XTick',theta_ticks)
+set(gca,'XTickLabel', theta_labels)
+
+plt.B_t_arm = figure;
+plot(theta_vect, imag(B_arm(1,:)));
+title('Slotted tangential flux density at t=0, armature')
+xlabel('Angular position [rad]')
+ylabel('Flux density [T]')
+grid on;
+set(gca,'XTick',theta_ticks)
+set(gca,'XTickLabel', theta_labels)
+
+plt.B_r_arm_fft = figure;
+bar(k, [b_rk_arm; b_tk_arm], 1.5, 'FaceAlpha', 1);
+set(gcf,'color','w');
+title('Harmonics of the armature flux density')
+xlabel('Spatial order')
+ylabel('Magnetic flux density [T]')
+legend('Radial', 'Tangential')
+plt.B_r_arm_fft.Position(3) = plt.B_r_arm_fft.Position(3)*1.5;
+ax=gca;
+ax.XAxis.MinorTick = 'on';
+
 % Plot on-load flux density
 plt.B_r = figure;
 plot(theta_vect, real(B(1,:)));
@@ -242,6 +278,17 @@ ylabel('Flux density [T]')
 grid on;
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
+
+plt.B_t_fft = figure;
+bar(k, [b_tk_NL; b_tk], 1.5, 'FaceAlpha', 1);
+set(gcf,'color','w');
+title('Harmonics of the tangential flux density')
+xlabel('Spatial order')
+ylabel('Magnetic flux density [T]')
+legend('No-load', 'On-load')
+plt.B_t_fft.Position(3) = plt.B_t_fft.Position(3)*1.5;
+ax=gca;
+ax.XAxis.MinorTick = 'on';
 
 % Plot forces
 plt.f_r = figure;
@@ -355,6 +402,7 @@ disp(f_n)
 % export_fig(plt.B_r_fft, 'Figures/B_r_fft', '-eps', '-dNOSAFER')
 % export_fig(plt.B_r_fft_2d, 'Figures/B_r_fft_2d', '-eps', '-dNOSAFER')
 % export_fig(plt.B_t, 'Figures/B_t', '-eps', '-transparent')
+% export_fig(plt.B_t_fft, 'Figures/B_t_fft', '-eps', '-dNOSAFER')
 % export_fig(plt.f_r, 'Figures/f_r', '-eps', '-transparent')
 % export_fig(plt.f_r_fft, 'Figures/f_r_fft', '-eps', '-dNOSAFER')
 % export_fig(plt.f_r_fft_2d, 'Figures/f_r_fft_2d', '-eps', '-dNOSAFER')
