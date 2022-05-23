@@ -15,7 +15,7 @@ function T_c = cogging_torque(B_PM, lambda, machine_params, parts, theta_r, type
     elseif isequal(type, 'gap')
         s = machine_params.Nseg;
         s2 = machine_params.s;
-        theta_c = pi/lcm(s2, 2*p)/4;       % phase shift for gap CT
+        theta_c = -pi/lcm(s2, 2*p)/4;       % phase shift for gap CT
     end
     
     N_L = lcm(s, 2*p);

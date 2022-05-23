@@ -371,7 +371,15 @@ plot(t_vect, T_e);
 title('Total torque')
 xlabel('Time [s]')
 ylabel('Torque [Nm]')
+ylim([min(T_e)*1.1 0])
 grid on;
+
+axes('Position', [.58 .5 .3 .25])
+box on
+plot(t_vect(1:length(T_e)/(machine.p/parts)), T_e(1:length(T_e)/(machine.p/parts)))
+title(' One el. period')
+xlabel('Time [s]')
+ylabel('Torque [Nm]')
 
 % Plot deformation
 plt.Yms = figure;
@@ -389,28 +397,28 @@ disp(f_n)
 %                            Save figures
 % ------------------------------------------------------------------
 
-% export_fig(plt.lambda_re_slot, 'Figures/lambda_re_slot', '-eps', '-transparent')
-% export_fig(plt.lambda_im_slot, 'Figures/lambda_im_slot', '-eps', '-transparent')
-% export_fig(plt.lambda_re_gap, 'Figures/lambda_re_gap', '-eps', '-transparent')
-% export_fig(plt.lambda_im_gap, 'Figures/lambda_im_gap', '-eps', '-transparent')
-% export_fig(plt.B_PM_sl, 'Figures/B_PM_sl', '-eps', '-transparent')
-% export_fig(plt.B_arm_sl_r, 'Figures/B_arm_sl_r', '-eps', '-transparent')
-% export_fig(plt.B_arm_sl_t, 'Figures/B_arm_sl_t', '-eps', '-transparent')
-% export_fig(plt.B_r_slotless, 'Figures/B_r_slotless', '-eps', '-transparent')
-% export_fig(plt.lambda, 'Figures/lambda', '-eps', '-transparent')
-% export_fig(plt.B_r, 'Figures/B_r', '-eps', '-transparent')
-% export_fig(plt.B_r_fft, 'Figures/B_r_fft', '-eps', '-dNOSAFER')
-% export_fig(plt.B_r_fft_2d, 'Figures/B_r_fft_2d', '-eps', '-dNOSAFER')
-% export_fig(plt.B_t, 'Figures/B_t', '-eps', '-transparent')
-% export_fig(plt.B_t_fft, 'Figures/B_t_fft', '-eps', '-dNOSAFER')
-% export_fig(plt.f_r, 'Figures/f_r', '-eps', '-transparent')
-% export_fig(plt.f_r_fft, 'Figures/f_r_fft', '-eps', '-dNOSAFER')
-% export_fig(plt.f_r_fft_2d, 'Figures/f_r_fft_2d', '-eps', '-dNOSAFER')
-% export_fig(plt.f_t, 'Figures/f_t', '-eps', '-transparent')
-% export_fig(plt.Tc, 'Figures/Tc', '-eps', '-transparent')
-% export_fig(plt.f_avg_r, 'Figures/f_avg_r', '-eps', '-transparent')
-% export_fig(plt.Te, 'Figures/Te', '-eps', '-transparent')
-% export_fig(plt.Yms, 'Figures/Yms', '-eps')
+exportgraphics(plt.lambda_re_slot, 'Figures/lambda_re_slot.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.lambda_im_slot, 'Figures/lambda_im_slot.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.lambda_re_gap, 'Figures/lambda_re_gap.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.lambda_im_gap, 'Figures/lambda_im_gap.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_PM_sl, 'Figures/B_PM_sl.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_arm_sl_r, 'Figures/B_arm_sl_r.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_arm_sl_t, 'Figures/B_arm_sl_t.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_r_slotless, 'Figures/B_r_slotless.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.lambda, 'Figures/lambda.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_r, 'Figures/B_r.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_r_fft, 'Figures/B_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_r_fft_2d, 'Figures/B_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_t, 'Figures/B_t.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_t_fft, 'Figures/B_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_r, 'Figures/f_r.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_r_fft, 'Figures/f_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_r_fft_2d, 'Figures/f_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_t, 'Figures/f_t.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.Tc, 'Figures/Tc.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_avg_r, 'Figures/f_avg_r.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.Te, 'Figures/Te.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.Yms, 'Figures/Yms.eps', 'BackgroundColor','none','ContentType','vector')
 
 % ------------------------------------------------------------------
 %                             Create GIFs
