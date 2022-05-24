@@ -1,5 +1,4 @@
-
-function [B_mmu, B_PM] = B_PM_slotless(theta_vect, t_vect, machine_params)
+function B_PM = B_PM_slotless(theta_vect, t_vect, machine_params)
 %Function B_PM of theta
 %   Returns the function of the magnetic flux density
 %   due to the permanent magnets at the stator teeth
@@ -23,9 +22,6 @@ mu = transpose(1:2:mu_max);            % Odd integers
 
 B_mmu = K_B(mu, p, R_s, R_r, R_m, Br, alpha_m, mu_r) ...
     .* f_Br(R_s, R_m, mu, p); 
-
-% Obsolete
-B_PM_t0 = sum(B_mmu .* cos(mu .* p .* theta_vect));
 
 % Create theta-t matrix and loop through time
 B_PM = zeros(length(t_vect), length(theta_vect));

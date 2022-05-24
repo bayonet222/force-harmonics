@@ -32,10 +32,10 @@ t_vect = theta_r/machine.omega_m;                   % Time [s]
 % ------------------------------------------------------------------
 
 % Magnetic field due to Permanent Magnets
-[B_mmu, B_PM_sl] = B_PM_slotless(theta_vect, t_vect, machine);
+B_PM_sl = B_PM_slotless(theta_vect, t_vect, machine);
 
 % Magnetic field due to armature reaction
-[B_mv, B_arm_sl] = B_arm_slotless(theta_vect, t_vect, machine);
+B_arm_sl = B_arm_slotless(theta_vect, t_vect, machine);
 
 % Total slotless magnetic field, superposition of PM and armature
 B_slotless = B_PM_sl + B_arm_sl;          
@@ -76,6 +76,7 @@ f_noload = B_noload.^2 / (2 * mu_0);
 
 f = B.^2 / (2 * mu_0);
 [r, f_rr] = fft_ss(real(f(1,:)), 300, parts);
+[~, f_rt] = fft_ss(imag(f(1,:)), 300, parts);
 
 [f_fx, f_ft, f_2d_fft] = fft_2D(real(f), parts, t_vect(end));
 
@@ -88,6 +89,7 @@ T_e = machine.R_s^2 * 2*pi * machine.L * imag(f_avg);
 
 % Calculate zeroth radial order. Correct?
 f_rr(1) = (max(real(f_avg)) - min(real(f_avg)))/2;
+f_rt(1) = (max(imag(f_avg)) - min(imag(f_avg)))/2;
 
 % Calculate cogging torque due to slots and segments
 T_c_slot = cogging_torque(B_PM_sl(1,:), lambda_slot_total, machine, parts, theta_r, 'slot');
@@ -142,6 +144,7 @@ plot(theta_vect, real(B_arm_sl(1,:)));
 title('Slotless radial flux density due to armature reaction')
 xlabel('Angular position [rad]')
 ylabel('Flux density [T]')
+ylim([-0.4 0.4])
 grid on;
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
@@ -151,6 +154,7 @@ plot(theta_vect, imag(B_arm_sl(1,:)));
 title('Slotless tangential flux density due to armature reaction')
 xlabel('Angular position [rad]')
 ylabel('Flux density [T]')
+ylim([-0.4 0.4])
 grid on;
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
@@ -330,6 +334,15 @@ grid on;
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 
+plt.f_t_fft = figure;
+bar(r, f_rt, 'FaceAlpha', 1);
+set(gcf,'color','w');
+title('Harmonics of the tangential force')
+xlabel('Spatial order')
+ylabel('Force density [N/m^2]')
+ax=gca;
+ax.XAxis.MinorTick = 'on';
+
 % Plot cogging torque for slots and slots+segments
 plt.Tc = figure;
 subplot(1,3,[1,2])
@@ -397,28 +410,29 @@ disp(f_n)
 %                            Save figures
 % ------------------------------------------------------------------
 
-exportgraphics(plt.lambda_re_slot, 'Figures/lambda_re_slot.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.lambda_im_slot, 'Figures/lambda_im_slot.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.lambda_re_gap, 'Figures/lambda_re_gap.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.lambda_im_gap, 'Figures/lambda_im_gap.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_PM_sl, 'Figures/B_PM_sl.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_arm_sl_r, 'Figures/B_arm_sl_r.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_arm_sl_t, 'Figures/B_arm_sl_t.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_r_slotless, 'Figures/B_r_slotless.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.lambda, 'Figures/lambda.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_r, 'Figures/B_r.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_r_fft, 'Figures/B_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_r_fft_2d, 'Figures/B_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_t, 'Figures/B_t.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.B_t_fft, 'Figures/B_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.f_r, 'Figures/f_r.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.f_r_fft, 'Figures/f_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.f_r_fft_2d, 'Figures/f_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.f_t, 'Figures/f_t.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.Tc, 'Figures/Tc.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.f_avg_r, 'Figures/f_avg_r.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.Te, 'Figures/Te.eps', 'BackgroundColor','none','ContentType','vector')
-exportgraphics(plt.Yms, 'Figures/Yms.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.lambda_re_slot, 'Figures/lambda_re_slot.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.lambda_im_slot, 'Figures/lambda_im_slot.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.lambda_re_gap, 'Figures/lambda_re_gap.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.lambda_im_gap, 'Figures/lambda_im_gap.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_PM_sl, 'Figures/B_PM_sl.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_arm_sl_r, 'Figures/B_arm_sl_r.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_arm_sl_t, 'Figures/B_arm_sl_t.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_r_slotless, 'Figures/B_r_slotless.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.lambda, 'Figures/lambda.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_r, 'Figures/B_r.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_r_fft, 'Figures/B_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_r_fft_2d, 'Figures/B_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_t, 'Figures/B_t.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.B_t_fft, 'Figures/B_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.f_r, 'Figures/f_r.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.f_r_fft, 'Figures/f_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.f_r_fft_2d, 'Figures/f_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.f_t, 'Figures/f_t.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.f_t_fft, 'Figures/f_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.Tc, 'Figures/Tc.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.f_avg_r, 'Figures/f_avg_r.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.Te, 'Figures/Te.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.Yms, 'Figures/Yms.eps', 'BackgroundColor','none','ContentType','vector')
 
 % ------------------------------------------------------------------
 %                             Create GIFs

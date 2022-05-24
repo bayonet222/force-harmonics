@@ -1,4 +1,4 @@
-function [B_mv, B_arm] = B_arm_slotless(theta_vect, t_vect, machine_params)
+function B_arm = B_arm_slotless(theta_vect, t_vect, machine_params)
 %Function B_arm of theta
 %   Returns the function of the magnetic flux density
 %   due to the armature reaction at the stator teeth
@@ -20,14 +20,8 @@ omega_m = machine_params.omega_m;                   % Rotation speed
 F_1 = gcd(p, s);                                    % Number of parts
 v = transpose([1 5 7 11 13 17 19 23 25 29 31 35 37 41 43 47 49]*F_1);    % Spatial orders
 
-B_mv_r = 3*mu_0/2 * J_v(N_t, R_s, v, s, theta_o, F_1) .* F_v(R_r, R_s, v, F_1) * I_1;
-B_mv_t = 3*mu_0/2 * J_v(N_t, R_s, v, s, theta_o, F_1) .* G_v(R_r, R_s, v, F_1) * I_1;
-
-B_mv = B_mv_r; % NEGLECTING TANGENTIAL PART
-
-% Obsolete
-B_arm_t0 = sum(B_mv_r .* sin(v.*theta_vect) + ...
-    1j * B_mv_t .* cos(v.*theta_vect));
+B_mv_r = 3*mu_0/2 * J_v(N_t, R_s, v, s, theta_o) .* F_v(R_r, R_s, v) * I_1;
+B_mv_t = 3*mu_0/2 * J_v(N_t, R_s, v, s, theta_o) .* G_v(R_r, R_s, v) * I_1;
 
 % Create theta-t matrix and loop through time
 B_arm = zeros(length(t_vect), length(theta_vect));
@@ -42,10 +36,10 @@ end
 
 end
 
-function J_func = J_v(N_t, R_s, v, s, theta_o, F1)
+function J_func = J_v(N_t, R_s, v, s, theta_o)
 % J_m according to Zhu (2010)
 
-J_func = 2/pi * N_t/R_s * K_sov(v, theta_o) .* K_pv(v, s) .* K_dv(v, F1);
+J_func = 2/pi * N_t/R_s * K_sov(v, theta_o) .* K_pv(v, s) .* K_dv(v);
 end
 
 function slot_opening = K_sov(v, theta_o)
@@ -61,7 +55,7 @@ pitch_factor = sin(v * pi /s);
 
 end
 
-function distribution_factor = K_dv(v, F1)
+function distribution_factor = K_dv(v)
 % The distribution factor according to Zhu/
 % In fact, it only creates a [1 -1 1 -1 ...] factor for v=[1 3 5 7]
 
@@ -70,7 +64,6 @@ distribution_factor = 1 .^v;
 end
 
 function rotation_sign = rot(v, F1)
-
 
 k_taum = round(sin(pi * (v/F1-1)/2),5) ./ round((3 * sin(pi*(v/F1-1)/6)),5);
 k_taum(isnan(k_taum))=1;
@@ -81,14 +74,14 @@ rotation_sign = sign(k_taup-k_taum);
 
 end
 
-function geom = F_v(R_r, R_s, v, F1)
+function geom = F_v(R_r, R_s, v)
 % The geometrical function of Zhu (2010) for r = R_s
 % should approximate 1/v * Rs/g
 
 geom = (1 + (R_r/R_s).^(2*v)) ./ (1 - (R_r/R_s).^(2*v));
 end
 
-function geom2 = G_v(R_r, R_s, v, F1)
+function geom2 = G_v(R_r, R_s, v)
 % Tangential geometric function of Zhu (2010) equals 1 
 % for r = R_s
 
