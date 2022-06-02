@@ -370,7 +370,15 @@ plot(t_vect, real(f_avg));
 title('Average radial force')
 xlabel('Time [s]')
 ylabel('Force density [N/m^2]')
+ylim([0 max(real(f_avg))*1.1])
 grid on;
+
+axes('Position', [.58 .3 .3 .25])
+box on
+plot(t_vect(1:(length(f_avg)-1)/(machine.p/parts)), real(f_avg(1:(length(f_avg)-1)/(machine.p/parts))))
+title(' One el. period')
+xlabel('Time [s]')
+ylabel('Force density [N/m^2]')
 
 plt.Te_NL = figure;
 plot(t_vect, T_e_NL);
@@ -389,7 +397,7 @@ grid on;
 
 axes('Position', [.58 .5 .3 .25])
 box on
-plot(t_vect(1:length(T_e)/(machine.p/parts)), T_e(1:length(T_e)/(machine.p/parts)))
+plot(t_vect(1:(length(T_e)-1)/(machine.p/parts)), T_e(1:(length(T_e)-1)/(machine.p/parts)))
 title(' One el. period')
 xlabel('Time [s]')
 ylabel('Torque [Nm]')
