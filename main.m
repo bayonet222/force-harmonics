@@ -54,6 +54,7 @@ lambda = lambda_slot_total + lambda_gap - 1;
 % Obtain the slotted flux density
 B_noload = B_PM_sl .* conj(lambda);
 B_arm = B_arm_sl .* conj(lambda);
+B_unseg = B_slotless .* conj(lambda_slot_total);
 B = B_slotless .* conj(lambda);
 
 % Perform Fourier transform of flux densities
@@ -74,8 +75,11 @@ B = B_slotless .* conj(lambda);
 % Total complex forces and its FFT
 f_noload = B_noload.^2 / (2 * mu_0);
 
+f_unseg = B_unseg.^2 / (2 * mu_0);
+[r, f_rr_unseg] = fft_ss(real(f_unseg(1,:)), 300, parts);
+
 f = B.^2 / (2 * mu_0);
-[r, f_rr] = fft_ss(real(f(1,:)), 300, parts);
+[~, f_rr] = fft_ss(real(f(1,:)), 300, parts);
 [~, f_rt] = fft_ss(imag(f(1,:)), 300, parts);
 
 [f_fx, f_ft, f_2d_fft] = fft_2D(real(f), parts, t_vect(end));
@@ -84,10 +88,13 @@ f = B.^2 / (2 * mu_0);
 f_NL_avg = transpose(mean(f_noload, 2));
 T_e_NL = machine.R_s^2 * 2*pi * machine.L * imag(f_NL_avg);
 
+f_avg_unseg = transpose(mean(f_unseg, 2));
+
 f_avg = transpose(mean(f, 2));
 T_e = machine.R_s^2 * 2*pi * machine.L * imag(f_avg);
 
 % Calculate zeroth radial order. Correct?
+f_rr_unseg(1) = (max(real(f_avg_unseg)) - min(real(f_avg_unseg)))/2;
 f_rr(1) = (max(real(f_avg)) - min(real(f_avg)))/2;
 f_rt(1) = (max(imag(f_avg)) - min(imag(f_avg)))/2;
 
@@ -101,9 +108,10 @@ T_c = T_c_slot + T_c_seg;
 % ------------------------------------------------------------------
 
 % Calculate static deformations for modes r
-Y_ms = deformation(machine, f_rr(1:20), r(1:20));
+Y_ms_unseg = deformation(machine, f_rr_unseg(1:25), r(1:25));
+Y_ms = deformation(machine, f_rr(1:25), r(1:25));
 
-f_n = Natural_frequencies(machine, r(1:20));
+f_n = Natural_frequencies(machine, r(1:25));
 
 % ------------------------------------------------------------------
 %                          Plot results
@@ -313,6 +321,19 @@ ylabel('Force density [N/m^2]')
 ax=gca;
 ax.XAxis.MinorTick = 'on';
 
+plt.f_r_fft_zoom = figure;
+bar(r, [f_rr_unseg; f_rr], 'FaceAlpha', 1);
+set(gcf,'color','w');
+title('Harmonics of the radial force')
+xlabel('Spatial order')
+ylabel('Force density [N/m^2]')
+xlim([-inf 320])
+ylim([0 1500])
+ax=gca;
+ax.XAxis.MinorTick = 'on';
+legend('Unsegmented', 'Segmented')
+plt.f_r_fft_zoom.Position(3) = plt.f_r_fft_zoom.Position(3)*2;
+
 plt.f_r_fft_2d = figure;
 imagesc(f_fx(1:2:end), f_ft(1:2:end), abs(f_2d_fft(1:2:end, 1:2:end)));
 xlim([0, 150*parts])
@@ -404,11 +425,13 @@ ylabel('Torque [Nm]')
 
 % Plot deformation
 plt.Yms = figure;
-bar(r(1:length(Y_ms)), Y_ms, 'FaceAlpha', 1);
+bar(r(1:length(Y_ms)), [Y_ms_unseg; Y_ms], 'FaceAlpha', 1);
 set(gcf,'color','w');
-title('Static deformation for different modes')
+title('Quasi-static deformation for different modes')
 xlabel('Spatial order')
 ylabel('Deflection [m]')
+legend('Unsegmented', 'Segmented')
+plt.Yms.Position(3) = plt.Yms.Position(3)*1.5;
 
 % Print natural frequencies
 disp(f_n.Properties.Description)
@@ -434,6 +457,7 @@ disp(f_n)
 % exportgraphics(plt.B_t_fft, 'Figures/B_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.f_r, 'Figures/f_r.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.f_r_fft, 'Figures/f_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.f_r_fft_zoom, 'Figures/f_r_fft_zoom.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.f_r_fft_2d, 'Figures/f_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.f_t, 'Figures/f_t.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.f_t_fft, 'Figures/f_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
