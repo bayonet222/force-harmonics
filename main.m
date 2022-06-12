@@ -111,7 +111,7 @@ T_c = T_c_slot + T_c_seg;
 Y_ms_unseg = deformation(machine, f_rr_unseg(1:25), r(1:25));
 Y_ms = deformation(machine, f_rr(1:25), r(1:25));
 
-f_n = Natural_frequencies(machine, r(1:25));
+[f_n, f_n_array] = Natural_frequencies(machine, r(1:25));
 
 % ------------------------------------------------------------------
 %                          Plot results
@@ -470,4 +470,7 @@ disp(f_n)
 %                             Create GIFs
 % ------------------------------------------------------------------
 
-%make_gif(theta_vect, t_vect, real(f), 'ForceRadial')
+% make_gif(theta_vect, t_vect, B_PM_sl, 'FluxPMRadial')
+% make_gif(theta_vect, t_vect, real(B_arm_sl), 'FluxPMRadial')
+% make_gif(theta_vect, t_vect, real(B), 'FluxRadial')
+% make_gif(theta_vect, t_vect, real(f), 'ForceRadial')

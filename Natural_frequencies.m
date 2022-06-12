@@ -1,4 +1,4 @@
-function [f_n_table] = Natural_frequencies(machine_params, m)
+function [f_n_table, f_n_array] = Natural_frequencies(machine_params, m)
 %Estimate the natural frequencies for the stator
 %   Gives the natural frequencies for the stator core and
 %   the stator-frame system for modes r. Based on Gieras Ch5
@@ -62,14 +62,18 @@ K_mc = 4 * DonnellMushtari2(kappa2, RadialOrder).^2 / D_c * pi * L_i * h_c * E_c
 K_mn = 2 * DonnellMushtari3(RadialOrder, AxialOrder, nu_f, R_f, L_f, h_f)/R_f * ...
     pi*L_f*h_f*E_f ./ (1-nu_f^2);
 
-% Calculate natural frequencies of core, frame and system
+% Calculate natural frequencies of core, frame, system and segmented system
 f_m_c = 1/(2*pi) * sqrt(K_mc / M_0);
 f_mn_f = 1/(2*pi) * sqrt(K_mn / M_f);
 f_mn_s = 1/(2*pi) * sqrt((K_mc + K_mn)/(M_0 + M_f + M_w));
+f_mn_ss = 1/(2*pi) * sqrt((K_mn)/(M_0 + M_f + M_w));
+
+% Create array with output
+f_n_array = [f_m_c.', f_mn_f.', f_mn_s.', f_mn_ss.'];
 
 % Create table with output
-f_n_table = table(f_m_c.', f_mn_f.', f_mn_s.', ...
-    'VariableNames', {'Stator Core', 'Frame', 'Assembly'}, ...
+f_n_table = table(f_m_c.', f_mn_f.', f_mn_s.', f_mn_ss.', ...
+    'VariableNames', {'Stator Core', 'Frame', 'Assembly', 'Segmented Assembly'}, ...
     'RowNames', "(" + string(RadialOrder.') + "," + string(AxialOrder.') + ")");
 
 f_n_table.Properties.Description = 'Natural frequencies for mode (m,n) in Hz';

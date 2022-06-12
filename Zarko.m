@@ -18,7 +18,7 @@ function [lambda, lambda_an, lambda_bn] = Zarko(machine_params, theta_list, N_la
     theta_2 = theta_s/2 + theta_o/2;
 
     g = log(Rs/Rr);
-    R_eval = Rs - (Rs - Rr)/40;         % Evaluate lambda just below surface
+    R_eval = Rs - (Rs - Rr)/50;         % Evaluate lambda just below surface
     b_o = theta_o;
     b = (b_o/(2*g) + sqrt((b_o/(2*g))^2 + 1))^2;
     a = 1/b;
