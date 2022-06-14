@@ -61,9 +61,9 @@ machine.rho_c = 7700;                           % Core density [kg/m3]
 machine.k_i = 0.96;                             % Stacking factor
 
 machine.E_plane = 180e9;                        % Young's modulus (in plane) [Pa]
-machine.E_x = 100e9;                            % Young's modulus (axial) [Pa]
-machine.nu_plane = 0.22;                        % Poisson ratio (in plane)
-machine.nu_x = 0.64;                            % Poisson ratio (out of plane)
+machine.E_z = 100e9;                            % Young's modulus (axial) [Pa]
+machine.nu_plane = 0.2;                        % Poisson ratio (in plane)
+machine.nu_z = 0.1;                            % Poisson ratio (out of plane)
 
 % Frame parameters
 machine.h_f = 0.05;                             % Frame thickness [m]
