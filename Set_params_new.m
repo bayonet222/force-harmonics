@@ -84,4 +84,7 @@ machine.D_f = 2*(machine.R_so + machine.h_f);   % Frame outer diameter [m]
 % Derived electrical parameters
 machine.f_e = machine.n_rpm/60 * machine.p;     % Electrical frequency [Hz]
 
+% Calculate mass of the machine
+[machine.M_c, machine.M_t, machine.M_w, machine.M_f] = masses(machine);
+
 save params machine mu_0

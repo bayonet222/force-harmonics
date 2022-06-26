@@ -1,15 +1,23 @@
 % Main program to analyse the harmonics in the ModHVDC machine
+% The program assumes each segment is identical, and thus studies the 
+% electromagnetic fields and forces along the circumference of one segment.
+% When calculating the spatial orders, it gives the order for the total 
+% machine, and thus only calculates order at multiples of the number of 
+% segments
+%
 % Casper Klop 2022
 
 % ------------------------------------------------------------------
 %                      Load machine parameters
 % ------------------------------------------------------------------
-load params
 
+% Parameters are set in Set_params.m
+load params
 
 % ------------------------------------------------------------------
 %                    Define additional variables
 % ------------------------------------------------------------------
+
 parts = machine.Nseg;                               % Section of the machine analysed
 
 % Stationary part
@@ -58,12 +66,15 @@ B_unseg = B_slotless .* conj(lambda_slot_total);
 B = B_slotless .* conj(lambda);
 
 % Perform Fourier transform of flux densities
-[k, b_rk_NL] = fft_ss(real(B_noload(1, :)), 100, parts);
+% No-load
+[k, b_rk_NL] = fft_ss(real(B_noload(1, :)), 100, parts);   
 [~, b_tk_NL] = fft_ss(imag(B_noload(1, :)), 100, parts);
 
+% Armature reaction
 [~, b_rk_arm] = fft_ss(real(B_arm(1, :)), 100, parts);
 [~, b_tk_arm] = fft_ss(imag(B_arm(1, :)), 100, parts);
 
+% Superposition of PM and armature
 [~, b_rk] = fft_ss(real(B(1, :)), 100, parts);
 [~, b_tk] = fft_ss(imag(B(1, :)), 100, parts);
 [B_fx, B_ft, B_2d_fft] = fft_2D(real(B), parts, t_vect(end));
@@ -72,24 +83,29 @@ B = B_slotless .* conj(lambda);
 %                          Force calculations
 % ------------------------------------------------------------------
 
-% Total complex forces and its FFT
+% Total complex force and its FFT
+% No-load
 f_noload = B_noload.^2 / (2 * mu_0);
 
+% Unsegmented machine for comparison
 f_unseg = B_unseg.^2 / (2 * mu_0);
 [r, f_rr_unseg] = fft_ss(real(f_unseg(1,:)), 300, parts);
 
+% Total forces
 f = B.^2 / (2 * mu_0);
 [~, f_rr] = fft_ss(real(f(1,:)), 300, parts);
 [~, f_rt] = fft_ss(imag(f(1,:)), 300, parts);
 
 [f_fx, f_ft, f_2d_fft] = fft_2D(real(f), parts, t_vect(end));
 
-% Constant forces and torque
+% Constant forces and torque for segments and unsegmented machine
+% No-load
 f_NL_avg = transpose(mean(f_noload, 2));
 T_e_NL = machine.R_s^2 * 2*pi * machine.L * imag(f_NL_avg);
 
 f_avg_unseg = transpose(mean(f_unseg, 2));
 
+% On-load
 f_avg = transpose(mean(f, 2));
 T_e = machine.R_s^2 * 2*pi * machine.L * imag(f_avg);
 
@@ -107,11 +123,15 @@ T_c = T_c_slot + T_c_seg;
 %                        Mechanical calculations
 % ------------------------------------------------------------------
 
-% Calculate static deformations for modes r
+% Calculate eigenfrequencies of stator system
+[f_n, f_n_array] = Natural_frequencies(machine, r(1:25));
+
+% Calculate quasi-static deformations for modes r
 Y_ms_unseg = deformation(machine, f_rr_unseg(1:25), r(1:25));
 Y_ms = deformation(machine, f_rr(1:25), r(1:25));
 
-[f_n, f_n_array] = Natural_frequencies(machine, r(1:25));
+A_m_unseg = deformation_sys(machine, f_rr_unseg(1:25), [f_n_array(1,3); f_n_array(17:40,3)].');
+A_m = deformation_sys(machine, f_rr(1:25), [f_n_array(1,3); f_n_array(17:40,3)].');
 
 % ------------------------------------------------------------------
 %                          Plot results
@@ -432,6 +452,19 @@ xlabel('Spatial order')
 ylabel('Deflection [m]')
 legend('Unsegmented', 'Segmented')
 plt.Yms.Position(3) = plt.Yms.Position(3)*1.5;
+Yms_yl = ylim;
+
+% Plot deformation
+plt.Am = figure;
+bar(r(1:10), [A_m_unseg(1:10); A_m(1:10)], 'FaceAlpha', 1);
+set(gcf,'color','w');
+title('Quasi-static deformation, including frame')
+xlabel('Spatial order')
+ylabel('Deflection [m]')
+ylim(Yms_yl)
+legend('Unsegmented', 'Segmented')
+
+plt.defl = deform_plot(machine, r(1:25), A_m);
 
 % Print natural frequencies
 disp(f_n.Properties.Description)
@@ -465,6 +498,8 @@ disp(f_n)
 % exportgraphics(plt.f_avg_r, 'Figures/f_avg_r.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.Te, 'Figures/Te.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.Yms, 'Figures/Yms.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.Am, 'Figures/Am.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.defl, 'Figures/defl.eps', 'BackgroundColor','none','ContentType','vector')
 
 % ------------------------------------------------------------------
 %                             Create GIFs

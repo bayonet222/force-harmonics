@@ -3,17 +3,11 @@ function [f_n_table, f_n_array] = Natural_frequencies(machine_params, m)
 %   Gives the natural frequencies for the stator core and
 %   the stator-frame system for modes r. Based on Gieras Ch5
 
-s = machine_params.s;                           % Number of slots
 h_c = machine_params.w_bi;                      % Stator thickness, assumed to be the yoke thickness
-D_c = 2*machine_params.R_so - h_c;              % Mean diameter                    
-rho_c = machine_params.rho_c;                   % Core density
-k_i = machine_params.k_i;                       % Stacking factor
+D_c = 2*machine_params.R_so - h_c;              % Mean diameter         
 L_i = machine_params.L;                         % Length
-h_sl = machine_params.d_s;                      % Slot depth
-w_th = machine_params.w_th;                     % Tooth width
 E_c = machine_params.E_plane;                   % Young's modulus
 nu_c = machine_params.nu_plane;                 % Poisson ratio
-w_s = 2*pi/s * machine_params.R_si - w_th;      % Slot width
 
 kappa2 = h_c^2 / (3 * D_c^2);                   % Nondimensional thickness
 
@@ -21,13 +15,15 @@ kappa2 = h_c^2 / (3 * D_c^2);                   % Nondimensional thickness
 D_f = machine_params.D_f;                       % Frame outer diameter
 L_f = machine_params.L_f;                       % Frame length
 h_f = machine_params.h_f;                       % Frame thickness
-rho_f = machine_params.rho_f;                   % Frame density
 E_f = machine_params.E_f;                       % Frame Young's modulus
 nu_f = machine_params.nu_f;                     % Frame Poisson ratio
 R_f = 0.5 * (D_f - h_f);                        % Mean frame radius
 
-% Winding parameters
-rho_w = machine_params.rho_w;                   % Winding density
+% Machine mass
+M_c = machine_params.M_c;                       % Stator core mass
+M_t = machine_params.M_t;                       % Teeth mass
+M_w = machine_params.M_c;                       % Winding mass (slot + overhang)
+M_f = machine_params.M_f;                       % Frame mass
 
 % Considered spatial orders
 % Radial: 0,1,2... until lowest force order, then multiples of lowest order
@@ -35,15 +31,6 @@ rho_w = machine_params.rho_w;                   % Winding density
 RadialOrder = repmat([0:m(2)-1 m(2:end)], 1, 3);
 AxialOrder = [ones(1, length(RadialOrder)/3), ...
     2*ones(1, length(RadialOrder)/3), 3*ones(1, length(RadialOrder)/3)];
-
-
-
-% Calculate masses of different components
-M_c = pi*D_c*h_c*L_i * rho_c * k_i;             % Stator core mass 
-M_t = s * h_sl * w_th * L_i * rho_c * k_i;      % Teeth mass
-M_w = (s * w_s * h_sl * L_i + ...
-    (w_s + w_th) * D_c * pi * h_sl)* rho_w;     % Winding mass (slot + overhang)
-M_f = pi*2*R_f*h_f*L_f * rho_f;                 % Frame mass
 
 % Calculate mass addition factors
 k_md = 1 + M_t/M_c;                             % For displacement, teeth
