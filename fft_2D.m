@@ -1,5 +1,5 @@
 function [fx, ft, Y2] = fft_2D(Data,Xmultiplier, T)
-%FFT_2D Summary of this function goes here
+%FFT_2D Calculate 2D FFT of data incl axes
 %   X multiplier: number of times X repeats
 %   T: period of the time signal
 

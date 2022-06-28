@@ -471,6 +471,13 @@ disp(f_n.Properties.Description)
 disp(f_n)
 
 % ------------------------------------------------------------------
+%                            Export forces
+% ------------------------------------------------------------------
+% Export forces for COMSOL, shifting theta=0 to align with the gap
+export_force(theta_vect, t_vect, ...
+    circshift(f, -(length(theta_vect)+1)/2-gap_idx, 2))
+
+% ------------------------------------------------------------------
 %                            Save figures
 % ------------------------------------------------------------------
 
