@@ -19,13 +19,15 @@ mtot = Rs + sum(A(2:end) .* cos(m(2:end).' .* theta));
 
 % Make polarplot
 defl = figure;
-pp.Rs = polarplot(theta, (Rs_t), 'k');
+pp.Rs = polarplot(Rs_t, 'k');
 hold on
-pp.m0 = polarplot(theta, [m0; m02], 'k--');
+pp.m0 = polarplot(m0, 'k--');
 hold on
-pp.m16 = polarplot(theta, (m16), 'r');
+pp.m02 = polarplot(m02, 'k--');
 hold on
-pp.mtot = polarplot(theta, (mtot), 'b');
+pp.m16 = polarplot(m16, 'r');
+hold on
+pp.mtot = polarplot(mtot, 'b');
 grid off
 Ax = gca;
 Ax.RTickLabel = [];

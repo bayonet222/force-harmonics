@@ -32,5 +32,6 @@ Pt_list = P1t(:);
 out = [a(:) b(:) abs(Pr_list) angle(Pr_list) abs(Pt_list) angle(Pt_list)];
 
 writematrix(out, 'forces.txt')
+writematrix(freq_vect, 'freqs.txt')
 
 end

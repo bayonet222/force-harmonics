@@ -474,8 +474,8 @@ disp(f_n)
 %                            Export forces
 % ------------------------------------------------------------------
 % Export forces for COMSOL, shifting theta=0 to align with the gap
-export_force(theta_vect, t_vect, ...
-    circshift(f, -(length(theta_vect)+1)/2-gap_idx, 2))
+% export_force(theta_vect, t_vect, ...
+%     circshift(f, -(length(theta_vect)+1)/2-gap_idx, 2))
 
 % ------------------------------------------------------------------
 %                            Save figures
@@ -506,7 +506,7 @@ export_force(theta_vect, t_vect, ...
 % exportgraphics(plt.Te, 'Figures/Te.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.Yms, 'Figures/Yms.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.Am, 'Figures/Am.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.defl, 'Figures/defl.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.defl, 'Figures/defl.png', 'Resolution', 600)
 
 % ------------------------------------------------------------------
 %                             Create GIFs
