@@ -109,10 +109,11 @@ f_avg_unseg = transpose(mean(f_unseg, 2));
 f_avg = transpose(mean(f, 2));
 T_e = machine.R_s^2 * 2*pi * machine.L * imag(f_avg);
 
-% Calculate zeroth radial order. Correct?
-f_rr_unseg(1) = (max(real(f_avg_unseg)) - min(real(f_avg_unseg)))/2;
-f_rr(1) = (max(real(f_avg)) - min(real(f_avg)))/2;
-f_rt(1) = (max(imag(f_avg)) - min(imag(f_avg)))/2;
+% Filter out 0th order DC component
+f_rr_unseg_filter = [(max(real(f_avg_unseg)) - min(real(f_avg_unseg)))/2 ...
+    f_rr_unseg(2:end)];
+
+f_rr_filter = [(max(real(f_avg)) - min(real(f_avg)))/2, f_rr(2:end)];
 
 % Calculate cogging torque due to slots and segments
 T_c_slot = cogging_torque(B_PM_sl(1,:), lambda_slot_total, machine, parts, theta_r, 'slot');
@@ -127,11 +128,12 @@ T_c = T_c_slot + T_c_seg;
 [f_n, f_n_array] = Natural_frequencies(machine, r(1:25));
 
 % Calculate quasi-static deformations for modes r
-Y_ms_unseg = deformation(machine, f_rr_unseg(1:25), r(1:25));
-Y_ms = deformation(machine, f_rr(1:25), r(1:25));
+Y_ms_unseg = deformation(machine, f_rr_unseg_filter(1:25), r(1:25));
+Y_ms = deformation(machine, f_rr_filter(1:25), r(1:25));
 
-A_m_unseg = deformation_sys(machine, f_rr_unseg(1:25), [f_n_array(1,3); f_n_array(17:40,3)].');
-A_m = deformation_sys(machine, f_rr(1:25), [f_n_array(1,3); f_n_array(17:40,3)].');
+A_m_unseg = deformation_sys(machine, f_rr_unseg_filter(1:25), ...
+    [f_n_array(1,3); f_n_array(17:40,3)].');
+A_m = deformation_sys(machine, f_rr_filter(1:25), [f_n_array(1,3); f_n_array(17:40,3)].');
 
 % ------------------------------------------------------------------
 %                          Plot results
@@ -317,6 +319,7 @@ set(gcf,'color','w');
 title('Harmonics of the tangential flux density')
 xlabel('Spatial order')
 ylabel('Magnetic flux density [T]')
+ylim([0 0.9])
 legend('No-load', 'On-load')
 plt.B_t_fft.Position(3) = plt.B_t_fft.Position(3)*1.5;
 ax=gca;
@@ -342,7 +345,7 @@ ax=gca;
 ax.XAxis.MinorTick = 'on';
 
 plt.f_r_fft_zoom = figure;
-bar(r, [f_rr_unseg; f_rr], 'FaceAlpha', 1);
+bar(r, [f_rr_unseg_filter; f_rr_filter], 'FaceAlpha', 1);
 set(gcf,'color','w');
 title('Harmonics of the radial force')
 xlabel('Spatial order')
