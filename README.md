@@ -36,5 +36,10 @@ Neglecting saturation, the total magnetic flux density for a slotless machine is
 The influence of the slots is taken into account by calculating the complex relative permeance, using the methods described by Damir Žarko. 
 The same can be done to take into account a small gap in between the segments, by analyzing a narrow slot in between very wide teeth. The effect of the slots and segment gap is superimposed, as shown below:
 
-![Relative permeance](Figures/lambda.eps)
+![Relative permeance](Figures/lambda.png)
 
+![Slotted radial flux density](GIFs/FluxRadial.gif)
+![Slotted tangential flux density](GIFs/FluxTangential.gif)
+
+## Resulting forces
+![Radial forces](GIFs/ForceRadial.gif)
