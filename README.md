@@ -26,12 +26,15 @@ First, the magnetic flux density resulting from the Permanent Magnets is calcula
 
 ![Radial flux density due to rotor](GIFs/FluxPMRadial.gif)
 
-Second, the magnetic flux density resulting from the armature reaction is calculated, assuming a slotless stator, which has both a radial and a tangential component:
+Second, the magnetic flux density resulting from the armature reaction is calculated, assuming a slotless stator, which has both a radial and a tangential component (onyl radial shown here):
 
 ![Radial flux density due to stator](GIFs/FluxArmRadial.gif)
 
 Neglecting saturation, the total magnetic flux density for a slotless machine is calculated by the linear superposition of the two magnetic fields.
 
 ## Influence of slots and segment gaps
+The influence of the slots is taken into account by calculating the complex relative permeance, using the methods described by Damir Žarko. 
+The same can be done to take into account a small gap in between the segments, by analyzing a narrow slot in between very wide teeth. The effect of the slots and segment gap is superimposed, as shown below:
 
+![Relative permeance](Figures/lambda.eps)
 
