@@ -16,7 +16,7 @@ Casper Klop, July 2022
 
 ---
 The specific machine type assumed in this script is a Surface-mounted PM machine with Fractional-Slot Concentrated Windings, with the stator segmented in multiple 3-phase sections.
-The model is tested with the parameters set in [](Set_params.m), but effort is put in parametrizing all equations so other models can be analyzed as well. Implicit, underlying assumptions in some of the equations might result in errors if another machine is analyzed.
+The model is tested with the parameters set in [Set_params.m](Set_params.m), but effort is put in parametrizing all equations so other models can be analyzed as well. Implicit, underlying assumptions in some of the equations might result in errors if another machine is analyzed.
 
 It is assumed that all segments are equal, and all calculations are done for one segment only.
 
