@@ -37,6 +37,5 @@ hold off
 legend([pp.Rs(1); pp.m0(1); pp.m16(1); pp.mtot(1)],...
     {'Stator radius','m=0', 'm='+string(m(2)), 'Total deflection'}, ...
     'Position', [0.42 0.42 0.2 0.2])
-%title('Quasi-static deflection', 'FontSize', 16)
 
 end

@@ -1,5 +1,5 @@
 function [M_c, M_t, M_w, M_f] = masses(machine_params)
-%Calculate masses of the system
+% Calculate masses of the system
 
 s = machine_params.s;                           % Number of slots
 h_c = machine_params.w_bi;                      % Stator thickness, assumed to be the yoke thickness

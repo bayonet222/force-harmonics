@@ -21,6 +21,9 @@ sccprj/
 # Matlab code generation folders
 codegen/
 
+# Test folder
+Tests*/
+
 # Simulink autosave extension
 *.autosave
 
@@ -32,3 +35,6 @@ octave-workspace
 
 # GIFs
 *.gif
+
+# txt exports
+*.txt

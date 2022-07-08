@@ -1,8 +1,8 @@
 function A_m = deformation_sys(machine_params, f_rm, freq_sys)
 % Generalized expression for the deformation of the system 
 %   Taking into account the frame and windings
-R = machine_params.R_so;
-L = machine_params.L_f;
+R = machine_params.R_so;                        % Outer stator radius
+L = machine_params.L_f;                         % Frame length
 
 % Machine mass
 M_c = machine_params.M_c;                       % Stator core mass

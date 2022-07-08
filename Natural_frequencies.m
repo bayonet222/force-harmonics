@@ -1,5 +1,5 @@
 function [f_n_table, f_n_array] = Natural_frequencies(machine_params, m)
-%Estimate the natural frequencies for the stator
+% Estimate the natural frequencies for the stator
 %   Gives the natural frequencies for the stator core and
 %   the stator-frame system for modes r. Based on Gieras Ch5
 
@@ -67,7 +67,7 @@ f_n_table.Properties.Description = 'Natural frequencies for mode (m,n) in Hz';
 end
 
 function Omega_m = DonnellMushtari2(kappa2, m)
-    % Roots of the second order characteristic equation
+% Roots of the second order characteristic equation
     
 Omega_m = 0.5 * sqrt((1 + m.^2 + kappa2*m.^4) - ...
     sqrt((1 + m.^2 + kappa2 * m.^4).^2 - 4 * kappa2 * m.^6));
@@ -76,8 +76,8 @@ Omega_m(m == 0) = 1;
 end
 
 function Omega_mn2 = DonnellMushtari3(m, n, nu_f, R_f, L_f, h_f)
-    % Roots of the third order characteristic equation
-    % for clamped-clammped frame
+% Roots of the third order characteristic equation
+% for clamped-clammped frame
 
 L0 = L_f * 0.3 ./ (n + 0.3);
 lambda = n * pi * R_f./(L_f-L0);
