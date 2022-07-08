@@ -33,8 +33,5 @@ Tests*/
 # Octave session info
 octave-workspace
 
-# GIFs
-*.gif
-
 # txt exports
 *.txt

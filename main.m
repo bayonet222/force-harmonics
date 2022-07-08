@@ -515,7 +515,13 @@ disp(f_n)
 %                             Create GIFs
 % ------------------------------------------------------------------
 
-% make_gif(theta_vect, t_vect, B_PM_sl, 'FluxPMRadial')
-% make_gif(theta_vect, t_vect, real(B_arm_sl), 'FluxPMRadial')
-% make_gif(theta_vect, t_vect, real(B), 'FluxRadial')
-% make_gif(theta_vect, t_vect, real(f), 'ForceRadial')
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), B_PM_sl, ...
+    'FluxPMRadial', 'Flux density due to PMs', 'Magnetic flux density [T]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(B_arm_sl), ...
+    'FluxArmRadial', 'Flux density due to windings', 'Magnetic flux density [T]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(B), ...
+    'FluxRadial', 'Radial slotted flux density', 'Magnetic flux density [T]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), imag(B), ...
+    'FluxTangential', 'Tangential slotted flux density', 'Magnetic flux density [T]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(f), ...
+    'ForceRadial', 'Radial forces', 'Force density [N/m2]', theta_ticks)
