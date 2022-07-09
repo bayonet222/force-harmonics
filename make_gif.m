@@ -15,6 +15,7 @@ grid on;
 set(gca,'XTick',theta_ticks)
 set(gca,'XTickLabel', theta_labels)
 ylim([min(y_mat(:)) * 1.1 max(y_mat(:)) * 1.1])     % Make sure axes are constant
+set(gcf,'color','w');
 
 % Loop through time
 for i = 2:length(t_vect)

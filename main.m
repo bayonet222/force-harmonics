@@ -461,7 +461,7 @@ Yms_yl = ylim;
 plt.Am = figure;
 bar(r(1:10), [A_m_unseg(1:10); A_m(1:10)], 'FaceAlpha', 1);
 set(gcf,'color','w');
-title('Quasi-static deformation, including frame')
+title('Quasi-static deformation, incl. frame')
 xlabel('Spatial order')
 ylabel('Deflection [m]')
 ylim(Yms_yl)
@@ -512,11 +512,21 @@ disp(f_n)
 % exportgraphics(plt.defl, 'Figures/defl.png', 'Resolution', 600)
 
 % ------------------------------------------------------------------
+%                       Create figures for README
+% ------------------------------------------------------------------
+% exportgraphics(plt.lambda, 'Figures_Readme/lambda.png', 'Resolution', 600)
+% exportgraphics(plt.f_r_fft, 'Figures_Readme/f_r_fft.png', 'Resolution', 600)
+% exportgraphics(plt.f_r_fft_2d, 'Figures_Readme/f_r_fft_2d.png', 'Resolution', 600)
+% exportgraphics(plt.f_avg_r,'Figures_Readme/f_avg_r.png', 'Resolution', 600)
+% exportgraphics(plt.Tc, 'Figures_Readme/Tc.png', 'Resolution', 600)
+% exportgraphics(plt.Te, 'Figures_Readme/Te.png', 'Resolution', 600)
+
+% ------------------------------------------------------------------
 %                             Create GIFs
 % ------------------------------------------------------------------
 
 % make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), B_PM_sl, ...
-%     'FluxPMRadial', 'Flux density due to PMs', 'Magnetic flux density [T]', theta_ticks)
+%      'FluxPMRadial', 'Flux density due to PMs', 'Magnetic flux density [T]', theta_ticks)
 % make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(B_arm_sl), ...
 %     'FluxArmRadial', 'Flux density due to windings', 'Magnetic flux density [T]', theta_ticks)
 % make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(B), ...

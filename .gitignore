@@ -35,3 +35,6 @@ octave-workspace
 
 # txt exports
 *.txt
+
+# EPS exports
+*.eps
