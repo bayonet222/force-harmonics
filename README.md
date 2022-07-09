@@ -45,31 +45,31 @@ By using Maxwell's stress tensor for magnetic fields in a radial coordinate syst
 As this force is a superposition of many force orders at different frequencies, a Fast-Fourier Transform is used to decompose the forces.
 This can be done purely for the spatial orders:
 
-![FFT of radial forces](Figures_Readme/f_r_fft.png)
+<img src="Figures_Readme/f_r_fft.png" alt="FFT of radial forces" width="400"/>
 
 Or in 2D, showing the frequencies at which the spatial orders occur:
 
-![2D FFT of radial forces](Figures_Readme/f_r_fft_2d.png)
+<img src="Figures_Readme/f_r_fft_2d.png" alt="2D FFT of radial forces" width="400"/>
 
 The zeroth order is found by calculating the variation in the DC component of the force over time:
 
-![Zeroth order](Figures_Readme/f_avg_r.png)
+<img src="Figures_Readme/f_avg_r.png" alt="Zeroth order" width="400"/>
 
 ## Torque calculations
 Only flux density harmonics of the same spatial order generate useful torque; this is analyzed for the no-load case in [cogging_torque.m](cogging_torque.m):
 
-![Cogging torque](Figures_Readme/Tc.png)
+<img src="Figures_Readme/Tc.png" alt="Cogging torque" width="400"/>
 
 And for the on-load torque simply by taking the average tangential force and multiplying this by an arm of R_s:
 
-![Total torque](Figures_Readme/Te.png)
+<img src="Figures_Readme/Te.png" alt="Total torque" width="400"/>
 
 ## Mechanical analysis
 An analytical estimate of the eigenfrequencies for different eigenmodes is calculated in [Natural_frequencies.m](Natural_frequencies.m). This is done for (systems of) simple ring models for both the stator core and the frame. The results are exported in a table.
 
 The quasi-static deformation caused by the calculated radial forces is calculated in [deformation.m](deformation.m) for the stator core and in [deformation_sys.m](deformation_sys.m) for the stator-frame system. The results are visualized in [deform_plot.m](deform_plot.m):
 
-![Quasi-static deformation](Figures/defl.png)
+<img src="Figures/defl.png" alt="Quasi-static deformation" width="400"/>
 
 ## Export of results
 The plots are exported in EPS in [Figures](Figures). GIFs are created in [make_gif.m](make_gif.m) using the gif toolbox from Chad Greene.
