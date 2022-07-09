@@ -58,7 +58,7 @@ The zeroth order is found by calculating the variation in the DC component of th
 ## Torque calculations
 Only flux density harmonics of the same spatial order generate useful torque; this is analyzed for the no-load case in [cogging_torque.m](cogging_torque.m):
 
-<img src="Figures_Readme/Tc.png" alt="Cogging torque" width="400"/>
+<img src="Figures_Readme/Tc.png" alt="Cogging torque" width="600"/>
 
 And for the on-load torque simply by taking the average tangential force and multiplying this by an arm of R_s:
 
