@@ -19,6 +19,7 @@ load params
 % ------------------------------------------------------------------
 
 parts = machine.Nseg;                               % Section of the machine analysed
+T = 1/machine.f_e;                                  % Electrical period
 
 % Stationary part
 N_theta_teeth = 101;                                % Number of samples/tooth
@@ -44,9 +45,11 @@ B_PM_sl = B_PM_slotless(theta_vect, t_vect, machine);
 
 % Magnetic field due to armature reaction
 B_arm_sl = B_arm_slotless(theta_vect, t_vect, machine);
+B_arm_sl_PE = B_arm_slotless_PE(theta_vect, t_vect, machine);
 
 % Total slotless magnetic field, superposition of PM and armature
-B_slotless = B_PM_sl + B_arm_sl;          
+B_slotless = B_PM_sl + B_arm_sl;
+B_slotless_PE = B_PM_sl + B_arm_sl_PE;
 
 % Use Zarko's method for relative permeance along 1 slot or gap
 [lambda_slot, lambda_an_slot, lambda_bn_slot] = Zarko(machine, theta_vect_teeth, N_lambda, 'slot');
@@ -64,6 +67,7 @@ B_noload = B_PM_sl .* conj(lambda);
 B_arm = B_arm_sl .* conj(lambda);
 B_unseg = B_slotless .* conj(lambda_slot_total);
 B = B_slotless .* conj(lambda);
+B_PE = B_slotless_PE .* conj(lambda);
 
 % Perform Fourier transform of flux densities
 % No-load
@@ -98,6 +102,8 @@ f = B.^2 / (2 * mu_0);
 
 [f_fx, f_ft, f_2d_fft] = fft_2D(real(f), parts, t_vect(end));
 
+f_PE = B_PE.^2 / (2 * mu_0);
+
 % Constant forces and torque for segments and unsegmented machine
 % No-load
 f_NL_avg = transpose(mean(f_noload, 2));
@@ -108,6 +114,10 @@ f_avg_unseg = transpose(mean(f_unseg, 2));
 % On-load
 f_avg = transpose(mean(f, 2));
 T_e = machine.R_s^2 * 2*pi * machine.L * imag(f_avg);
+
+% Power Electronic converter connected
+f_avg_PE = transpose(mean(f_PE, 2));
+T_e_PE = machine.R_s^2 * 2*pi * machine.L * imag(f_avg_PE);
 
 % Filter out 0th order DC component
 f_rr_unseg_filter = [(max(real(f_avg_unseg)) - min(real(f_avg_unseg)))/2 ...
@@ -419,7 +429,7 @@ grid on;
 
 axes('Position', [.58 .3 .3 .25])
 box on
-plot(t_vect(1:(length(f_avg)-1)/(machine.p/parts)), real(f_avg(1:(length(f_avg)-1)/(machine.p/parts))))
+plot(t_vect(t_vect<T), real(f_avg(t_vect<T)))
 title(' One el. period')
 xlabel('Time [s]')
 ylabel('Force density [N/m^2]')
@@ -441,10 +451,45 @@ grid on;
 
 axes('Position', [.58 .5 .3 .25])
 box on
-plot(t_vect(1:(length(T_e)-1)/(machine.p/parts)), T_e(1:(length(T_e)-1)/(machine.p/parts)))
+plot(t_vect(t_vect<T), T_e(t_vect<T))
 title(' One el. period')
 xlabel('Time [s]')
 ylabel('Torque [Nm]')
+
+% Analyze influence of time harmonics due to the Power Converter
+plt.I_PE = figure;
+plot(linspace(0, T, 500), machine.i_RMS * sqrt(2).* ...
+    [sum(machine.I_h_pu.' .* sin(2*pi/T*machine.h_PE.' * linspace(0, T, 500)));
+    sum(machine.I_h_pu.' .* sin(machine.h_PE.' * (2*pi/T* linspace(0, T, 500)-2*pi/3)));
+    sum(machine.I_h_pu.' .* sin(machine.h_PE.' * (2*pi/T* linspace(0, T, 500)+2*pi/3)))])
+title('Current with PE time harmonics')
+xlabel('Time [s]')
+ylabel('Current [A]')
+grid on;
+legend('i_a', 'i_b', 'i_c')
+plt.I_PE.Position(4) = plt.I_PE.Position(4)*0.6;
+
+plt.zero_PE = figure;
+plot(t_vect(t_vect<T), [real(f_avg_PE(t_vect<T)); real(f_avg(t_vect<T))]);
+title('Zeroth order radial force')
+xlabel('Time [s]')
+ylabel('Force density [N/m^2]')
+grid on;
+lh = legend('PE converter connected', 'Sinusoidal currents');
+lh.AutoUpdate = 'off';
+lh.PlotChildren = lh.PlotChildren([2 1]);
+plt.zero_PE.Position(4) = plt.zero_PE.Position(4)*0.9;
+
+plt.Te_PE = figure;
+plot(t_vect(t_vect<T), [real(T_e_PE(t_vect<T)); real(T_e(t_vect<T))]);
+title('Electrical torque')
+xlabel('Time [s]')
+ylabel('Torque [Nm]')
+grid on;
+lh = legend('PE converter connected', 'Sinusoidal currents');
+lh.AutoUpdate = 'off';
+lh.PlotChildren = lh.PlotChildren([2 1]);
+plt.Te_PE.Position(4) = plt.Te_PE.Position(4)*0.9;
 
 % Plot deformation
 plt.Yms = figure;
@@ -507,6 +552,9 @@ disp(f_n)
 % exportgraphics(plt.Tc, 'Figures/Tc.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.f_avg_r, 'Figures/f_avg_r.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.Te, 'Figures/Te.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.I_PE, 'Figures/I_PE.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.zero_PE, 'Figures/zero_PE.eps', 'BackgroundColor','none','ContentType','vector')
+% exportgraphics(plt.Te_PE, 'Figures/Te_PE.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.Yms, 'Figures/Yms.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.Am, 'Figures/Am.eps', 'BackgroundColor','none','ContentType','vector')
 % exportgraphics(plt.defl, 'Figures/defl.png', 'Resolution', 600)

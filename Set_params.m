@@ -56,6 +56,10 @@ machine.N_c = machine.s/2;                      % Number of coils
 machine.n_s = 61;                               % Number of turns per coil
 machine.I_s = machine.n_s * machine.i_RMS;      % Slot current
 
+% Power Electronic parameters
+machine.I_h_pu = [1 0.02 0.02];                      % Current time harmonics in pu
+machine.h_PE = [1 37 41];                          % Time harmonic orders in the current
+
 % Mechanical parameters
 machine.rho_c = 7700;                           % Core density [kg/m3]
 machine.k_i = 0.96;                             % Stacking factor

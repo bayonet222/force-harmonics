@@ -24,7 +24,8 @@ Second, the magnetic flux density resulting from the armature reaction is calcul
 
 ![Radial flux density due to stator](GIFs/FluxArmRadial.gif)
 
-Neglecting saturation, the total magnetic flux density for a slotless machine is calculated by the linear superposition of the two magnetic fields.
+Neglecting saturation, the total magnetic flux density for a slotless machine is calculated by the linear superposition of the two magnetic fields. 
+A brief analysis of the influence of time harmonics due to Power Electronic Converters is performed as well in [B_arm_slotless_PE.m](B_arm_slotless_PE.m), but this is quite preliminary.
 
 ## Influence of slots and segment gaps
 The influence of the slots is taken into account by calculating the complex relative permeance, using the methods described by Damir Žarko. The equations resulting from the conformal mapping described in his paper are solved numerically in [Zarko.m](Zarko.m). 
