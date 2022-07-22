@@ -529,57 +529,57 @@ disp(f_n)
 %                            Save figures
 % ------------------------------------------------------------------
 
-% exportgraphics(plt.lambda_re_slot, 'Figures/lambda_re_slot.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.lambda_im_slot, 'Figures/lambda_im_slot.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.lambda_re_gap, 'Figures/lambda_re_gap.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.lambda_im_gap, 'Figures/lambda_im_gap.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_PM_sl, 'Figures/B_PM_sl.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_arm_sl_r, 'Figures/B_arm_sl_r.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_arm_sl_t, 'Figures/B_arm_sl_t.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_r_slotless, 'Figures/B_r_slotless.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.lambda, 'Figures/lambda.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_r, 'Figures/B_r.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_r_fft, 'Figures/B_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_r_fft_2d, 'Figures/B_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_t, 'Figures/B_t.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.B_t_fft, 'Figures/B_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.f_r, 'Figures/f_r.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.f_r_fft, 'Figures/f_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.f_r_fft_zoom, 'Figures/f_r_fft_zoom.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.f_r_fft_2d, 'Figures/f_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.f_t, 'Figures/f_t.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.f_t_fft, 'Figures/f_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.Tc, 'Figures/Tc.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.f_avg_r, 'Figures/f_avg_r.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.Te, 'Figures/Te.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.I_PE, 'Figures/I_PE.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.zero_PE, 'Figures/zero_PE.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.Te_PE, 'Figures/Te_PE.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.Yms, 'Figures/Yms.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.Am, 'Figures/Am.eps', 'BackgroundColor','none','ContentType','vector')
-% exportgraphics(plt.defl, 'Figures/defl.png', 'Resolution', 600)
+exportgraphics(plt.lambda_re_slot, 'Figures/lambda_re_slot.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.lambda_im_slot, 'Figures/lambda_im_slot.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.lambda_re_gap, 'Figures/lambda_re_gap.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.lambda_im_gap, 'Figures/lambda_im_gap.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_PM_sl, 'Figures/B_PM_sl.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_arm_sl_r, 'Figures/B_arm_sl_r.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_arm_sl_t, 'Figures/B_arm_sl_t.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_r_slotless, 'Figures/B_r_slotless.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.lambda, 'Figures/lambda.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_r, 'Figures/B_r.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_r_fft, 'Figures/B_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_r_fft_2d, 'Figures/B_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_t, 'Figures/B_t.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.B_t_fft, 'Figures/B_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_r, 'Figures/f_r.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_r_fft, 'Figures/f_r_fft.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_r_fft_zoom, 'Figures/f_r_fft_zoom.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_r_fft_2d, 'Figures/f_r_fft_2d.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_t, 'Figures/f_t.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_t_fft, 'Figures/f_t_fft.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.Tc, 'Figures/Tc.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.f_avg_r, 'Figures/f_avg_r.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.Te, 'Figures/Te.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.I_PE, 'Figures/I_PE.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.zero_PE, 'Figures/zero_PE.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.Te_PE, 'Figures/Te_PE.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.Yms, 'Figures/Yms.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.Am, 'Figures/Am.eps', 'BackgroundColor','none','ContentType','vector')
+exportgraphics(plt.defl, 'Figures/defl.png', 'Resolution', 600)
 
 % ------------------------------------------------------------------
 %                       Create figures for README
 % ------------------------------------------------------------------
-% exportgraphics(plt.lambda, 'Figures_Readme/lambda.png', 'Resolution', 600)
-% exportgraphics(plt.f_r_fft, 'Figures_Readme/f_r_fft.png', 'Resolution', 600)
-% exportgraphics(plt.f_r_fft_2d, 'Figures_Readme/f_r_fft_2d.png', 'Resolution', 600)
-% exportgraphics(plt.f_avg_r,'Figures_Readme/f_avg_r.png', 'Resolution', 600)
-% exportgraphics(plt.Tc, 'Figures_Readme/Tc.png', 'Resolution', 600)
-% exportgraphics(plt.Te, 'Figures_Readme/Te.png', 'Resolution', 600)
+exportgraphics(plt.lambda, 'Figures_Readme/lambda.png', 'Resolution', 600)
+exportgraphics(plt.f_r_fft, 'Figures_Readme/f_r_fft.png', 'Resolution', 600)
+exportgraphics(plt.f_r_fft_2d, 'Figures_Readme/f_r_fft_2d.png', 'Resolution', 600)
+exportgraphics(plt.f_avg_r,'Figures_Readme/f_avg_r.png', 'Resolution', 600)
+exportgraphics(plt.Tc, 'Figures_Readme/Tc.png', 'Resolution', 600)
+exportgraphics(plt.Te, 'Figures_Readme/Te.png', 'Resolution', 600)
 
 % ------------------------------------------------------------------
 %                             Create GIFs
 % ------------------------------------------------------------------
 
-% make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), B_PM_sl, ...
-%      'FluxPMRadial', 'Flux density due to PMs', 'Magnetic flux density [T]', theta_ticks)
-% make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(B_arm_sl), ...
-%     'FluxArmRadial', 'Flux density due to windings', 'Magnetic flux density [T]', theta_ticks)
-% make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(B), ...
-%     'FluxRadial', 'Radial slotted flux density', 'Magnetic flux density [T]', theta_ticks)
-% make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), imag(B), ...
-%     'FluxTangential', 'Tangential slotted flux density', 'Magnetic flux density [T]', theta_ticks)
-% make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(f), ...
-%     'ForceRadial', 'Radial forces', 'Force density [N/m2]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), B_PM_sl, ...
+     'FluxPMRadial', 'Flux density due to PMs', 'Magnetic flux density [T]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(B_arm_sl), ...
+    'FluxArmRadial', 'Flux density due to windings', 'Magnetic flux density [T]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(B), ...
+    'FluxRadial', 'Radial slotted flux density', 'Magnetic flux density [T]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), imag(B), ...
+    'FluxTangential', 'Tangential slotted flux density', 'Magnetic flux density [T]', theta_ticks)
+make_gif(theta_vect, t_vect(t_vect<1/machine.f_e), real(f), ...
+    'ForceRadial', 'Radial forces', 'Force density [N/m2]', theta_ticks)

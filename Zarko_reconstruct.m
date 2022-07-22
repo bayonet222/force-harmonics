@@ -11,17 +11,19 @@ end
 % Plot the reconstructed lambda
 handle_re = figure;
 plot(theta_list, real(lambda), theta_list, real(lambda_rec), '--')
-legend('Exact', 'Fourier series')
+legend('Exact', 'Fourier series','Location', 'North')
 title('Real part of the complex permeance')
 xlabel('Angular position [rad]')
 ylabel('Relative permeance')
+xlim([0 max(theta_list)])
 grid on;
 
 handle_im = figure;
 plot(theta_list, imag(lambda), theta_list, imag(lambda_rec), '--')
-legend('Exact', 'Fourier series')
+legend('Exact', 'Fourier series','Location', 'North')
 title('Imaginary part of the complex permeance')
 xlabel('Angular position [rad]')
 ylabel('Relative permeance')
+xlim([0 max(theta_list)])
 grid on;
 end
